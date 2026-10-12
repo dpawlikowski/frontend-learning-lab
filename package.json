@@ -1,0 +1,10 @@
+{
+  "name": "frontend-learning-lab",
+  "version": "1.0.0",
+  "description": "Standalone static learning platform for Senior Frontend / Frontend-heavy Fullstack interview preparation. No build step, npm install, server, API key, CDN or backend is required.",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
