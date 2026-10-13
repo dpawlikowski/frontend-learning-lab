@@ -352,3 +352,152 @@ Sources:
 - W3C, *Web Content Accessibility Guidelines (WCAG) 2.2*, https://www.w3.org/TR/WCAG22/
 
 Validation for V28: JavaScript is unchanged from V27; JavaScript syntax, CSS parsing, duplicate static HTML IDs, HTML-copy parity, and ZIP integrity are checked. Automated browser loading was blocked by the runtime environment, so this release does not claim successful browser screenshot or physical-device testing.
+
+
+## V29 — uproszczona nauka fiszek
+
+- Jeden widoczny przebieg nauki: odpowiedz z pamięci → kliknij „Pokaż odpowiedź” → oceń → przejdź dalej.
+- Odpowiedź podstawowa jest wyeksponowana; kontekst seniora, pułapki i szczegóły są zgrupowane w jednym rozwijanym bloku.
+- Wpisywanie własnej odpowiedzi i samoocena pewności są opcjonalne, a nie obowiązkowe.
+- Kliknięcie dowolnego miejsca karty nie odsłania już przypadkowo odpowiedzi; odsłanianie jest jawne.
+- Istniejąca sesja ma wybór 5, 10, 20 lub 50 kart. Domyślnie pozostaje 10.
+- Skrócono etykiety ocen i usunięto z głównego rzędu redundantne przyciski statusu; istniejący algorytm oceniania i powtórek pozostał bez zmian.
+- Zachowano istniejące tryby, historię prób, `localStorage`, backup JSON oraz dane fiszek. Zmiany nie dodają nowego trybu nauki.
+
+Research: aktywne przypominanie i korekcyjna informacja zwrotna wspierają utrwalanie i zastosowanie wiedzy; zob. https://doi.org/10.1016/j.learninstruc.2025.102196 oraz https://doi.org/10.1016/j.learninstruc.2025.102219.
+
+
+## Flashcard filtering and link affordances (V30)
+
+- The filter toolbar explains what each control does and announces how many cards match.
+- Search covers questions, answers, examples, tags, category, source title/description, and the deeper explanation fields already stored on cards.
+- “Clear filters” returns to the complete deck and is also offered when no cards match.
+- Starting a study session uses only the currently filtered result set; it no longer silently discards the user's search/category/status/source selection. The session size is capped to the number of matching cards.
+- Links with a valid `href` explicitly use a pointer cursor; disabled buttons retain their disabled cursor.
+- No new storage schema or learning mode was added. Existing local progress, review scheduling, user cards, history and JSON backup remain in place.
+
+Research rationale: retrieval practice works best when learners actually attempt recall before seeing the answer; the current answer-before-reveal sequence is preserved. Clear labels and visible focus support predictable operation and keyboard use (WCAG 2.2). Sources: https://doi.org/10.1016/j.learninstruc.2025.102196 and https://www.w3.org/TR/WCAG22/
+
+
+## V31 UX update
+
+- Active filters are visible as removable chips; each chip clears only its own filter.
+- Search is accent-insensitive (for example, `powtorzenie` also matches `powtórzenie`).
+- Search includes source IDs and handles tags whether stored as arrays or strings.
+- Cursor semantics are corrected: active links use a pointer; only genuinely disabled controls show a prohibited cursor.
+- No learning logic, review scheduling, or storage schema was intentionally changed.
+
+Research rationale: retrieval practice with corrective feedback supports retention; interface changes prioritize legible filter state and predictable controls rather than extra gamification. References: https://doi.org/10.1007/s10648-025-10076-6 and https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/
+
+
+## Filter and keyboard consistency (V32)
+
+- Added visible labels to existing search, category, status, source, and session-size controls. The existing IDs and saved filter values are unchanged.
+- Multi-word search now treats each word as a required term and searches across the existing combined card text. Terms may appear in different fields; accent-insensitive normalization remains enabled.
+- Implemented the already-advertised keyboard grading shortcuts: after revealing an answer, keys 1–4 map to “Nie pamiętałem”, “Częściowo”, “Umiem wyjaśnić”, and “Łatwe”. Space reveals/toggles the answer, arrows navigate. Keyboard shortcuts are ignored while editing form fields or while a modal is open. Repeated keydown events cannot grade multiple cards accidentally.
+- Removed the misleading hint that 1–3 set card status before reveal; that behavior was not implemented and there are no matching visible controls.
+- No new study modes, storage keys, or learning algorithms were added.
+
+Research basis: retrieval practice paired with answer feedback supports retention; the UI should make answer reveal and grading predictable. See Aljabri (2024), a randomized study of 177 learners in which both immediate and delayed feedback outperformed no-feedback/testing and restudy conditions, with immediate feedback showing the strongest long-term retention in that study: https://doi.org/10.1057/s41599-024-03983-6. W3C recommends properly associated labels for form controls: https://www.w3.org/WAI/tutorials/forms/labels/.
+
+
+## Simpler flashcard controls (V33)
+
+- Added “Wszystkie pasujące” to the existing session-size selector. The session queue already supports the `all` value, but the interface did not expose it. It selects all cards matching the current filters; no new study mode or scheduling logic was introduced.
+- Simplified the on-card instructions into one short reminder, reducing vertical space before the question.
+- Simplified the filter introduction and aligned the visible category labels across the selector and active-filter chips.
+- Corrected the category selector's default option label, which was being reset to “Wszystkie typy” after the deck was populated.
+- Rebalanced the existing filter controls into a clearer desktop grid and retained two-column/mobile stacking for narrow screens.
+- No changes to the learning algorithm, review intervals, storage schema, or card content.
+
+Research rationale: retrieval practice benefits are conditional in part on feedback availability, so the UI should keep the answer-reveal and self-rating path prominent while reducing extraneous UI instructions. See Gonçalves, Muniz & Jaeger (2025), meta-analysis of 44 studies: https://doi.org/10.1007/s10648-025-10076-6. Baymard's search UX research discusses clear filter naming and no-result guidance: https://baymard.com/research/ecommerce-search.
+
+
+## Flashcard simplification V34
+
+- Removed repeated instruction banners from the front and answer sides; the global keyboard hint and the existing reveal/rating controls remain.
+- Renamed the answer heading to the neutral **Odpowiedź** so it does not promise that every source answer is short.
+- Short examples stay visible. Long code/examples (over 260 characters or six lines) are collapsed behind a clear disclosure and remain fully available.
+- No card content, review intervals, grading values, storage keys/schema, filters, backup format, or interview-training behavior was intentionally changed.
+
+This follows a simple learning path: retrieve from memory, reveal the reference answer, inspect a longer example only when useful, then self-rate. Retrieval practice benefits from explanatory feedback; the goal here is to reduce repeated interface instructions, not remove the explanation itself. See: https://pubmed.ncbi.nlm.nih.gov/30998028/ and https://www.retrievalpractice.org/strategies/2018/5/25/feedback
+
+## V35 — naprawa filtrów i sesji fiszek
+- Naprawiono konflikt nazwy `source` między funkcją pomocniczą a elementem HTML o `id="source"`, który powodował pustą listę źródeł i filtrowanie do zera kart.
+- Wypełnianie listy źródeł korzysta teraz z jawnego selektora DOM; metadane źródła pobiera `getSourceInfo`.
+- Filtr kategorii obsługuje wiele zaznaczonych kategorii; poprzedni zapis pojedynczej kategorii jest nadal odczytywany.
+- Zachowano schemat danych fiszek, algorytm powtórek, klucze postępu, backup JSON i strukturę GitHub Pages.
+
+
+## V36 UX polish
+- Fiszki: przycisk sesji pokazuje liczbę kart wynikającą z bieżących filtrów i wyboru rozmiaru; akcje są wyłączone, gdy filtr nie zwraca wyników.
+- Losowanie wybiera inną kartę, jeśli dostępna jest więcej niż jedna, i daje krótką informację o pozycji w wynikach.
+- Etykieta kategorii pokazuje liczbę zaznaczonych kategorii; podpowiedź wyboru wielu kategorii jest prostsza.
+- Nie zmieniono formatu danych fiszek ani algorytmu powtórek.
+
+## V37 · czytelniejsze filtry
+- Liczba fiszek jest widoczna przy każdej kategorii i źródle, dzięki czemu łatwiej ocenić, co wybór filtra da przed uruchomieniem nauki.
+- „Wszystkie źródła” pokazuje łączną liczbę kart; puste źródła są jawnie oznaczone zerem.
+- Tooltipy filtrów wyjaśniają liczby oraz obsługę wielokrotnego wyboru kategorii.
+- Komunikat pustych wyników jest krótszy i mówi wprost, co zrobić dalej.
+- Nie zmieniono algorytmu powtórek, formatu danych fiszek, kluczy localStorage ani formatu backupu JSON.
+
+
+## V38 · uproszczenie czytania fiszek
+
+- Ograniczono sztucznie wysoką minimalną wysokość karty, dzięki czemu krótsze pytania i odpowiedzi nie zostawiają dużej pustej przestrzeni.
+- Wzmocniono wizualną hierarchię odpowiedzi głównej, zachowując dodatkowe wyjaśnienia w sekcji rozwijanej.
+- Uproszczono etykiety i instrukcję pod kartą; zachowano treść edukacyjną, algorytm powtórek, statusy, historię, localStorage, import/eksport JSON oraz konfigurację GitHub Pages.
+- Dodano obsługę preferencji ograniczenia animacji.
+
+## V39 — prostszy mechanizm fiszek
+
+- Zastąpiono niewygodny natywny wybór wielu kategorii wyszukiwanym menu z checkboxami. Nie trzeba pamiętać o Ctrl/Command.
+- Zaznaczanie kategorii natychmiast aktualizuje wyniki; menu pokazuje liczbę fiszek przypisanych do kategorii, ma „Zaznacz wszystkie”, „Wyczyść” i „Gotowe”.
+- Menu kategorii zamyka się kliknięciem poza nim lub klawiszem Escape, a na telefonie otwiera się jako dolny panel.
+- Skrócono podpowiedź przy fiszce do jednej sekwencji: odpowiedz z pamięci → pokaż odpowiedź → oceń uczciwie.
+- Zachowano dotychczasowe pole `category` w ustawieniach UI, strukturę fiszek, algorytm powtórek, statusy, historię, localStorage, backup JSON i GitHub Pages.
+
+
+## V40 UX polish
+- Uproszczono nazwy akcji w selektorze kategorii, żeby odróżnić pokazanie wszystkich kart od wyczyszczenia zaznaczenia.
+- Dopracowano układ przycisków odpowiedzi i ocen na małych ekranach; główna akcja „Pokaż odpowiedź” jest wyraźniejsza.
+- Dodano widoczne stany fokusu dla klawiatury i ograniczenie animacji zgodne z preferencją systemową.
+- Nie zmieniano algorytmu powtórek, danych fiszek ani schematu localStorage.
+
+
+## V41 — uproszczony rytm fiszki
+
+- Skrócono etykiety i teksty w opcjonalnej notatce, żeby nie konkurowały z pytaniem.
+- Zmieniono nazwy samooceny na krótsze i bardziej bezpośrednie.
+- Uporządkowano wizualnie notatkę, wybór pewności i dodatkowe wyjaśnienia, szczególnie na małych ekranach.
+- Bez zmian w schemacie danych, algorytmie powtórek, zapisie lokalnym, historii i formacie kopii JSON.
+
+
+## V43 — uproszczona odpowiedź na fiszce
+- Wyraźnie oddzielono główną odpowiedź od opcjonalnego rozwinięcia.
+- Usunięto powtarzającą się listę kontrolną; pozostawiono pojedynczy prompt sprawdzający zrozumienie.
+- Puste pola dodatkowe nie generują ogólnych, powtarzalnych placeholderów udających wiedzę przypisaną do konkretnej fiszki.
+- Zachowano strukturę danych, mechanizm powtórek i zapis lokalny.
+
+
+## V44 – prostsza praca z fiszkami
+- Szybkie oznaczenie wszystkich aktualnie pasujących fiszek jako znane lub nieznane (z potwierdzeniem).
+- Paginowana lista pytań i odpowiedzi; w każdej karcie można podejrzeć odpowiedź i zmienić status pojedynczej fiszki.
+- Lista działa na aktualnych filtrach i nie wymaga uruchamiania sesji nauki.
+- Zachowano istniejący schemat danych i algorytm powtórek.
+
+
+## V45 – prostszy przegląd fiszek
+
+- Dodano „Pokaż odpowiedzi na stronie” i „Ukryj odpowiedzi na stronie” w przeglądzie fiszek.
+- Dodano podsumowanie statusów znane / nieznane / do nauki dla aktualnie filtrowanego zestawu.
+- Zachowano istniejący algorytm powtórek, dane, zapis lokalny, backup JSON i workflow GitHub Pages.
+
+
+## V46 · Uproszczone oznaczanie statusów
+
+- Dodano masową akcję „Oznacz pasujące jako do nauki”, obok znanych i nieznanych.
+- Ujednolicono etykiety statusów w przeglądzie fiszek: „Znam”, „Nie znam”, „Do nauki”.
+- Poprawiono minimalny rozmiar przycisków statusu i widoczność fokusu klawiatury.
+- Bez zmian schematu statusów, algorytmu powtórek, danych fiszek, historii, localStorage i kopii JSON.
