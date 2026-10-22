@@ -5,6 +5,6 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "node scripts/check-html.js"
+    "test": "node --test scripts/flashcard-order.test.js && node scripts/check-html.js"
   }
 }
