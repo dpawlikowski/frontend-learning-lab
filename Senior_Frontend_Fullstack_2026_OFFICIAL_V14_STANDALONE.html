@@ -2,7 +2,16 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f7fb" media="(prefers-color-scheme: light)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fiszki">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Senior Frontend / Fullstack 2026 · Learning Lab V44 · Fiszki i Interview Training</title>
 <meta name="description" content="Oficjalna, audytowana baza fiszek i materiałów do rozmów Senior Frontend / Frontend-heavy Fullstack 2026. JavaScript, React, Next.js 16, TypeScript, security, API Design, performance i system design.">
 <style>
@@ -1966,6 +1975,226 @@ footer{color:#c9d6ea !important}
 }
 
 </style>
+
+<style id="ux-flow-v55">
+/* V55: one action per study step. Content, grades, and storage keys stay compatible. */
+#flashcardsHub #mobileStudyBar{
+  display:grid !important;
+  grid-template-columns:max-content minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:min(100%, 560px) !important;
+  max-width:100% !important;
+  height:auto !important;
+  margin:0 0 10px !important;
+}
+#flashcardsHub #filterDrawer:not([open]) > .filter-drawer-body{display:none !important}
+#flashcardsHub #openFilters{
+  width:auto !important;
+  min-width:104px !important;
+  max-width:none !important;
+  height:48px !important;
+  padding:10px 14px !important;
+  border-radius:12px;
+  font-weight:800;
+  white-space:nowrap !important;
+}
+#flashcardsHub #mobileStudyBar #studyQueue{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:52px !important;
+  height:auto !important;
+  padding:12px 16px !important;
+  border-radius:14px !important;
+  font-size:17px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+  line-height:1.2 !important;
+}
+#flashcardsHub .search-field{position:relative}
+#flashcardsHub .search-clear{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+  width:36px;
+  height:36px;
+  min-height:36px !important;
+  padding:0 !important;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#d5e4f8;
+  font-size:22px;
+  line-height:1;
+}
+#flashcardsHub .search-clear[hidden]{display:none !important}
+#flashcardsHub #search{padding-right:44px !important}
+#flashcardsHub .session-launch{
+  display:flex !important;
+  align-items:center;
+  gap:8px;
+  grid-template-columns:none !important;
+}
+#flashcardsHub .session-launch label{
+  position:static !important;
+  width:auto !important;
+  height:auto !important;
+  clip:auto !important;
+  overflow:visible !important;
+}
+
+#flashcardsHub .study-queue-banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 0 10px;
+  padding:8px 8px 8px 12px;
+  border-radius:14px;
+}
+#flashcardsHub .study-queue-banner strong{font-size:15px;line-height:1.35}
+#flashcardsHub .study-queue-banner button{min-height:44px;padding:8px 14px;border-radius:12px;font-weight:750}
+
+@keyframes uxCardIn{from{opacity:.4}to{opacity:1}}
+#flashcardsHub .card{animation:uxCardIn .22s ease}
+#flashcardsHub pre.example .tok-k,#flashcardsHub .example .tok-k{color:#9fd0ff}
+#flashcardsHub pre.example .tok-s,#flashcardsHub .example .tok-s{color:#b7f3c9}
+#flashcardsHub pre.example .tok-c,#flashcardsHub .example .tok-c{color:#93a6bf}
+#flashcardsHub pre.example .tok-n,#flashcardsHub .example .tok-n{color:#ffd08a}
+
+#flashcardsHub #controls{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;align-items:stretch}
+#flashcardsHub #controls .grade-prompt,
+#flashcardsHub #controls .grade-grid,
+#flashcardsHub #controls #revealAnswer,
+#flashcardsHub #controls #backToQuestion,
+#flashcardsHub #controls #anotherSession,
+#flashcardsHub #controls #backToDeck{grid-column:1 / -1}
+#flashcardsHub #controls .grade-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.is-studying #flashcardsHub #controls .grade-grid .gradebtn{grid-column:auto !important;width:auto !important;min-width:0 !important}
+#flashcardsHub #controls .gradebtn{min-height:48px;width:100%}
+#flashcardsHub #controls #backToQuestion{
+  min-height:40px !important;
+  background:transparent !important;
+  border-color:transparent !important;
+  color:#b7c9de !important;
+  font-size:14px !important;
+  font-weight:650 !important;
+}
+@media (min-width:801px){
+  #flashcardsHub #controls .grade-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+
+.session-done-card{max-width:36rem;margin:8px auto 0;padding:8px 4px 12px;text-align:center}
+.session-done-card h2{margin:8px 0 0;font-size:clamp(2.4rem,10vw,4rem);line-height:1;letter-spacing:-.04em}
+.session-done-lead{margin:8px 0 16px;color:var(--muted);font-size:1.05rem}
+.session-done-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}
+.session-done-metrics span{
+  display:flex;flex-direction:column;gap:2px;justify-content:center;
+  min-height:72px;padding:10px 8px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);
+  font-size:13px;line-height:1.3;color:#d5e2f4;
+}
+.session-done-metrics b{font-size:1.45rem;letter-spacing:-.03em;color:#f4f7ff}
+.session-streak{margin:0 0 8px;font-size:1.05rem;font-weight:750;color:#b7f3ea}
+.session-note{margin:0 auto;max-width:38ch;color:#c9d6ea;font-size:15px;line-height:1.55}
+
+body.is-studying #flashcardsHub .toolbar,
+body.session-done #flashcardsHub .toolbar,
+body.is-studying #flashcardsHub .sidebar,
+body.session-done #flashcardsHub .sidebar,
+body.is-studying #flashcardsHub .flipHint,
+body.session-done #flashcardsHub .flipHint,
+body.session-done #flashcardsHub #cardProgress{display:none !important}
+
+@media (max-width:800px){
+  body.is-studying .top,
+  body.is-studying #hubnav,
+  body.session-done .top,
+  body.session-done #hubnav{display:none !important}
+  body.is-studying #flashcardsHub #controls .grade-prompt{display:none !important}
+  body.is-studying #flashcardsHub #controls,
+  body.session-done #flashcardsHub #controls{
+    position:fixed !important;
+    left:0 !important;right:0 !important;bottom:0 !important;top:auto !important;
+    width:auto !important;
+    z-index:60;
+    margin:0 !important;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom)) !important;
+    background:rgba(8,16,30,.96);
+    border:0;
+    border-top:1px solid var(--line);
+    border-radius:16px 16px 0 0 !important;
+    box-shadow:0 -12px 32px rgba(0,0,0,.28);
+  }
+  body.is-studying,body.session-done{padding-bottom:calc(168px + env(safe-area-inset-bottom))}
+  body.is-studying #flashcardsHub #controls #revealAnswer,
+  body.session-done #flashcardsHub #controls #anotherSession{min-height:52px;font-size:17px !important}
+}
+
+@media (max-width:340px){
+  .app{padding:8px !important}
+  #flashcardsHub .toolbar{margin-left:0 !important;margin-right:0 !important;width:100% !important}
+  #flashcardsHub .content{padding:8px 12px 16px !important}
+  #flashcardsHub .question{font-size:1.28rem !important}
+  .stats{grid-template-columns:1fr 1fr !important}
+  #hubnav button{padding:8px 10px !important}
+  .session-done-metrics{grid-template-columns:1fr}
+  .session-done-metrics span{min-height:52px;flex-direction:row;justify-content:space-between;align-items:center}
+}
+@media (max-height:520px) and (orientation:landscape){
+  body.is-studying .top,
+  body.is-studying #hubnav,
+  body.is-studying #flashcardsHub .flipHint,
+  body.is-studying #flashcardsHub .sidebar,
+  body.session-done .top,
+  body.session-done #hubnav{display:none !important}
+  body.is-studying #flashcardsHub .cardhead{padding:8px 12px !important}
+  body.is-studying,body.session-done{padding-bottom:calc(132px + env(safe-area-inset-bottom))}
+}
+
+@media (prefers-color-scheme:light){
+  html{color-scheme:light}
+  :root{--bg:#f4f7fb;--panel:#fff;--panel2:#eef3f9;--line:#d5e0ee;--text:#142033;--muted:#4c6078}
+  body{background:#f4f7fb !important;color:#142033 !important}
+  body:before{opacity:0 !important}
+  .toolbar,.sidebar,#hubnav,.modalbox,.study-queue-banner{
+    background:#fff !important;color:#142033 !important;border-color:#d5e0ee !important;
+  }
+  #hubnav button{color:#1c314c}
+  #flashcardsHub .face,#flashcardsHub .face.front,#flashcardsHub .face.back{
+    background:#fff !important;color:#142033 !important;border-color:#d5e0ee !important;
+    box-shadow:0 14px 36px rgba(20,40,80,.08) !important;
+  }
+  #flashcardsHub .question,#flashcardsHub .answer,#flashcardsHub .answer-primary,#flashcardsHub .take,
+  #flashcardsHub .badge,#flashcardsHub .number,#flashcardsHub .cardhead{color:#142033 !important}
+  #flashcardsHub .label,#flashcardsHub .flipHint,.session-note,.session-done-lead{color:#3e5573 !important}
+  #flashcardsHub .answer-primary{background:#f3f7fc !important}
+  #flashcardsHub pre.example,#flashcardsHub .example{
+    background:#f6f8fb !important;color:#1b3148 !important;border-color:#d5e0ee !important;
+  }
+  #flashcardsHub pre.example .tok-k{color:#0b57b8}
+  #flashcardsHub pre.example .tok-s{color:#0d7a45}
+  #flashcardsHub pre.example .tok-c{color:#60758d}
+  #flashcardsHub pre.example .tok-n{color:#9a5b00}
+  #flashcardsHub .field,#flashcardsHub .select,#flashcardsHub textarea{
+    background:#fff !important;color:#142033 !important;border-color:#c9d6e6 !important;
+  }
+  .session-done-metrics span{background:#fff;color:#3e5573;border-color:#d5e0ee}
+  .session-done-metrics b,.session-done-card h2{color:#142033 !important}
+  #flashcardsHub #controls button,#flashcardsHub .gradebtn{background:#fff;color:#142033;border-color:#c9d6e6}
+  .gradebtn.again{color:#9a2440 !important}
+  .gradebtn.partial{color:#8a5a10 !important}
+  .gradebtn.good{color:#0d7a45 !important}
+  .gradebtn.easy{color:#0c6b73 !important}
+  body.is-studying #flashcardsHub #controls,body.session-done #flashcardsHub #controls{
+    background:rgba(255,255,255,.96);border-top-color:#d5e0ee;
+  }
+  #flashcardsHub .search-clear{color:#3e5573}
+}
+@media (prefers-reduced-motion:reduce){
+  #flashcardsHub .card{animation:none !important}
+}
+
+</style>
 </head>
 <body>
 <a class="skip-link" href="#mount">Przejdź do fiszki</a>
@@ -2011,10 +2240,10 @@ Content-Type: application/json
   <div class="prose-card"><h3>Na co uważać podczas rozmowy</h3><ul class="checklist"><li>Nie myl authentication z authorization.</li><li>Nie myl idempotencji z „brakiem efektów ubocznych”.</li><li>Nie zakładaj, że POST zawsze musi tworzyć rekord.</li><li>Nie używaj 200 do każdego błędu biznesowego.</li><li>Nie projektuj API bez paginacji, jeśli kolekcja może rosnąć.</li><li>Nie obiecuj performance bez wskazania metryki i workloadu.</li></ul></div>
 </div></section>
 <div id="flashcardsHub" class="hub active">
-<section class="toolbar"><div class="mobile-study-bar" id="mobileStudyBar"><button type="button" class="toolbtn" id="openFilters" aria-expanded="true" aria-controls="filterDrawerBody">Filtry</button></div><details class="filter-drawer" id="filterDrawer" open><summary class="filter-drawer-summary">Filtry i sesja</summary><div class="filter-drawer-body" id="filterDrawerBody">
-<div class="filter-help"><strong>Znajdź fiszki</strong><span>Wpisz temat lub ustaw filtry. Sesja użyje tylko pasujących fiszek.</span></div>
+<section class="toolbar"><div class="mobile-study-bar" id="mobileStudyBar"><button type="button" class="toolbtn" id="openFilters" aria-expanded="false" aria-controls="filterDrawerBody">Filtry</button></div><details class="filter-drawer" id="filterDrawer"><summary class="filter-drawer-summary">Filtry i sesja</summary><div class="filter-drawer-body" id="filterDrawerBody">
+<div class="filter-help"><strong>Znajdź fiszki</strong><span>Zawęź talię tylko wtedy, gdy chcesz. Potem naciśnij Ucz się.</span></div>
 <div class="tools">
-<label class="filter-field search-field"><span>Szukaj fiszek</span><input id="search" class="field search" placeholder="Np. React render, cache, TypeScript…" autocomplete="off" aria-label="Szukaj fiszek" title="Wpisz jeden lub kilka terminów. Wszystkie muszą wystąpić w treści fiszki."></label>
+<label class="filter-field search-field"><span>Szukaj fiszek</span><input id="search" class="field search" placeholder="Np. React render, cache, TypeScript…" autocomplete="off" aria-label="Szukaj fiszek" title="Wpisz jeden lub kilka terminów. Wszystkie muszą wystąpić w treści fiszki."><button type="button" class="search-clear" id="clearSearch" hidden aria-label="Wyczyść wyszukiwanie">×</button></label>
 <div class="filter-field category-picker-field"><span id="categoryLabel">Kategoria</span><div class="category-picker" id="categoryPicker"><button type="button" class="select category-picker-trigger" id="categoryPickerTrigger" aria-expanded="false" aria-controls="categoryPickerPanel">Wszystkie kategorie <span aria-hidden="true">⌄</span></button><div class="category-picker-panel" id="categoryPickerPanel" hidden><input id="categoryPickerSearch" class="field category-picker-search" type="search" placeholder="Szukaj kategorii…" aria-label="Szukaj kategorii"><div class="category-picker-actions"><button type="button" id="categorySelectAll">Zaznacz wszystkie</button><button type="button" id="categoryClearAll">Wyczyść</button></div><div id="categoryPickerOptions" class="category-picker-options"></div><div class="category-picker-footer"><span id="categoryPickerCount">Wszystkie kategorie</span><button type="button" class="toolbtn primary" id="categoryPickerDone">Gotowe</button></div></div></div><select id="category" class="select category-multi category-state" multiple size="1" aria-label="Kategorie aktywnego filtra" tabindex="-1"><option value="all">Wszystkie kategorie</option></select></div>
 <label class="filter-field"><span>Status nauki</span><select id="status" class="select" aria-label="Filtruj według statusu" title="Pokaż fiszki według statusu nauki"><option value="all">Wszystkie statusy</option><option value="review">Do powtórzenia</option><option value="known">Znane</option><option value="unknown">Nieznane</option></select></label>
 <label class="filter-field"><span>Źródło</span><select id="source" class="select" aria-label="Filtruj według źródła" title="Pokaż fiszki z wybranego źródła"><option value="all">Wszystkie źródła</option></select></label>
@@ -2024,7 +2253,7 @@ Content-Type: application/json
 <div class="subtools flashcard-bulk-tools" aria-label="Szybkie działania na fiszkach"><span class="chip" id="bulkScope">Działania dotyczą aktualnie pasujących fiszek</span><button class="toolbtn" id="markMatchingKnown" type="button">Oznacz pasujące jako znane</button><button class="toolbtn" id="markMatchingUnknown" type="button">Oznacz pasujące jako nieznane</button><button class="toolbtn" id="markMatchingReview" type="button">Oznacz pasujące jako do nauki</button><button class="toolbtn" id="toggleAnswerBrowser" type="button" aria-expanded="false">Lista pytań i odpowiedzi</button></div><div id="answerBrowser" class="answer-browser" hidden><div class="answer-browser-head"><div><strong>Przegląd fiszek</strong><span id="answerBrowserCount">Wszystkie pasujące fiszki</span></div><label>Na stronie <select id="answerPageSize" class="select"><option value="20">20</option><option value="50" selected>50</option><option value="100">100</option></select></label><button class="toolbtn" id="closeAnswerBrowser" type="button">Zamknij</button></div><div class="answer-browser-quick"><button type="button" id="answerShowPage">Pokaż odpowiedzi na stronie</button><button type="button" id="answerHidePage">Ukryj odpowiedzi na stronie</button></div><div class="answer-browser-summary" id="answerBrowserSummary" aria-live="polite"></div><div id="answerBrowserItems" class="answer-browser-items"></div><div class="answer-browser-pagination"><button class="toolbtn" id="answerPrevPage" type="button">← Poprzednie</button><span id="answerPageLabel"></span><button class="toolbtn" id="answerNextPage" type="button">Następne →</button></div></div>
 <div class="subtools"><button class="toolbtn" id="sources">196 źródeł</button><button class="toolbtn" id="export">Pełny backup JSON</button><button class="toolbtn" id="importBtn">Import JSON</button><input id="importFile" type="file" accept="application/json" hidden><button class="toolbtn" id="reset">Reset stanów</button><span class="chip">←/→ poprzednia lub następna · <kbd>Spacja</kbd> pokaż odpowiedź · po odsłonięciu <kbd>1–4</kbd> oceń odpowiedź</span></div>
 </div></details></section>
-<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress" id="cardProgress" role="progressbar" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" aria-label="Pozycja w zestawie fiszek"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Odpowiedz z pamięci, pokaż wzorzec i oceń szczerze. <span class="hint-swipe">Przesuń kartę w lewo lub w prawo, żeby zmienić fiszkę.</span> <span class="hint-keys">Skróty: strzałki, spacja, po odpowiedzi klawisze 1–4.</span></div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
+<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress" id="cardProgress" role="progressbar" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" aria-label="Pozycja w zestawie fiszek"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Pokaż odpowiedź, potem oceń jedną z czterech opcji. <span class="hint-swipe">Poza sesją przesuń kartę, żeby zmienić fiszkę.</span> <span class="hint-keys">Skróty: spacja, po odpowiedzi klawisze 1–4.</span></div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
 </div>
 <div id="auditHub" class="hub"></div><div id="resourcesHub" class="hub"></div><div id="casesHub" class="hub"></div><div id="cheatsHub" class="hub"></div><div id="architectureHub" class="hub"></div><div id="careerHub" class="hub extraHub"></div>
 <div id="modal" class="modal"><div class="modalbox" id="modalbox"></div></div>
@@ -2200,16 +2429,16 @@ function updateFilterSummary(){
   }));
  }
 }
-function clearFlashcardFilters(){search.value='';[...category.options].forEach(o=>o.selected=o.value==='all');status.value='all';document.querySelector('#source').value='all';index=0;queueMode=false;const banner=document.querySelector('#studyQueueBanner');if(banner)banner.hidden=true;apply();saveFlashcardUiState();search.focus();}
+function clearFlashcardFilters(){search.value='';[...category.options].forEach(o=>o.selected=o.value==='all');status.value='all';document.querySelector('#source').value='all';index=0;sessionReport=null;queueMode=false;setStudyMode(false);const banner=document.querySelector('#studyQueueBanner');if(banner)banner.hidden=true;apply();saveFlashcardUiState();search.focus();}
 function updateFlashcardControlState(){
  const randomButton=document.querySelector('#random'),studyButton=document.querySelector('#studyQueue'),sizeEl=document.querySelector('#sessionSize'),categoryEl=document.querySelector('#category'),categoryLabel=document.querySelector('#categoryLabel');
  const available=filtered.length,requested=sizeEl?.value==='all'?available:Math.min(available,Math.max(1,Number(sizeEl?.value)||10));
  if(randomButton){randomButton.disabled=available===0;randomButton.title=available?`Losuj jedną z ${available} pasujących fiszek`:'Brak pasujących fiszek. Wyczyść filtry, aby losować.';}
- if(studyButton){studyButton.disabled=available===0;studyButton.textContent=available?`Ucz się · ${requested} kart`:'Brak wyników';studyButton.title=available?`Rozpocznij sesję z ${requested} kart z aktualnych wyników`:'Zmień filtry, aby rozpocząć sesję';}
+ if(studyButton){studyButton.disabled=available===0;studyButton.textContent=available?'Ucz się':'Brak wyników';studyButton.title=available?`Rozpocznij sesję z ${requested} kart z aktualnych wyników`:'Zmień filtry, aby rozpocząć sesję';}
  if(categoryLabel&&categoryEl){categoryLabel.textContent='Kategoria';syncCategoryPicker();}
 }
 function apply(){
- queueMode=false;
+ sessionReport=null;queueMode=false;setStudyMode(false);
  const banner=document.querySelector('#studyQueueBanner');if(banner)banner.hidden=true;
  const q=normalizeSearchText(search.value),tokens=q.split(/\s+/).filter(Boolean),selectedCats=[...category.selectedOptions].map(o=>o.value).filter(v=>v!=='all'),st=status.value,src=document.querySelector('#source').value;
  filtered=cards.filter(c=>{
@@ -2227,10 +2456,37 @@ function apply(){
 }
 
 let queueMode=false;
+let sessionReport=null;
 let learningSession={startedAt:0,ids:[],results:[]};
 function readFlashcardUiState(){return readStorageJson(APP_UI_KEY,{})}
+
+function localStudyDay(date){const d=date||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function rememberStudyDay(days){const list=Array.isArray(days)?days.filter(d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)):[];const today=localStudyDay();if(!list.includes(today))list.push(today);return list.slice(-90)}
+function studyStreakCount(days){const set=new Set(Array.isArray(days)?days:[]);const cursor=new Date();if(!set.has(localStudyDay(cursor)))cursor.setDate(cursor.getDate()-1);let n=0;while(set.has(localStudyDay(cursor))&&n<120){n++;cursor.setDate(cursor.getDate()-1)}return n}
+function highlightCode(escaped){
+ const hold=[];
+ const stash=m=>{hold.push(m);return '\u0001'+hold.length+'\u0001'};
+ let s=String(escaped||'');
+ s=s.replace(/\/\*[\s\S]*?\*\//g,stash);
+ s=s.replace(/\/\/[^\n]*/g,stash);
+ s=s.replace(/&quot;[\s\S]*?&quot;/g,stash);
+ s=s.replace(/&#39;[\s\S]*?&#39;/g,stash);
+ s=s.replace(/`[\s\S]*?`/g,stash);
+ const paint=part=>part.replace(/\b(?:const|let|var|function|return|if|else|async|await|new|class|import|export|try|catch|throw|typeof|instanceof|null|undefined|true|false|this|switch|case|break|yield|void)\b/g,'<span class="tok-k">$&</span>').replace(/\b\d+(?:\.\d+)?\b/g,'<span class="tok-n">$&</span>');
+ s=s.split(/(\u0001\d+\u0001)/).map(part=>/^\u0001\d+\u0001$/.test(part)?part:paint(part)).join('');
+ s=s.replace(/\u0001(\d+)\u0001/g,(_,i)=>{const raw=hold[Number(i)-1]||'';const cls=/^(?:&quot;|&#39;|`)/.test(raw)?'tok-s':'tok-c';return '<span class="'+cls+'">'+raw+'</span>'});
+ return s;
+}
+function setStudyMode(active){
+ document.body.classList.toggle('is-studying',!!active);
+ document.body.classList.toggle('session-done',!!sessionReport);
+ document.querySelector('#flashcardsHub .toolbar')?.classList.toggle('study-mode',!!active);
+}
 function saveFlashcardUiState(){
- const state={version:1,updatedAt:Date.now(),search:document.querySelector('#search')?.value||'',category:[...document.querySelector('#category')?.selectedOptions||[]].map(o=>o.value).filter(v=>v!=='all'),status:document.querySelector('#status')?.value||'all',source:document.querySelector('#source')?.value||'all',sessionSize:document.querySelector('#sessionSize')?.value||'10',currentCardId:filtered[index]?.id||null,index,queueMode:!!queueMode,queueIds:queueMode?filtered.map(c=>c.id):[],queueSession:learningSession,activeHub:document.querySelector('#hubnav button.active')?.dataset?.extra||document.querySelector('#hubnav button.active')?.dataset?.hub||'flashcards'};
+ const prev=readFlashcardUiState();
+ const studiedToday=(queueMode&&learningSession&&Array.isArray(learningSession.results)&&learningSession.results.length>0)||(sessionReport&&Number(sessionReport.completed)>0);
+ const studyDays=studiedToday?rememberStudyDay(prev.studyDays):(Array.isArray(prev.studyDays)?prev.studyDays.filter(d=>typeof d==='string'):[]);
+ const state={version:1,updatedAt:Date.now(),search:document.querySelector('#search')?.value||'',category:[...document.querySelector('#category')?.selectedOptions||[]].map(o=>o.value).filter(v=>v!=='all'),status:document.querySelector('#status')?.value||'all',source:document.querySelector('#source')?.value||'all',sessionSize:document.querySelector('#sessionSize')?.value||'10',currentCardId:filtered[index]?.id||null,index,queueMode:!!queueMode,queueIds:queueMode?filtered.map(c=>c.id):[],queueSession:learningSession,activeHub:document.querySelector('#hubnav button.active')?.dataset?.extra||document.querySelector('#hubnav button.active')?.dataset?.hub||'flashcards',studyDays};
  safeStorageSet(APP_UI_KEY,state);
 }
 function restoreFlashcardUiState(){
@@ -2245,8 +2501,8 @@ function restoreFlashcardUiState(){
 function resumeSavedLearningQueue(saved=readFlashcardUiState()){
  if(!saved?.queueMode||!Array.isArray(saved.queueIds)||!saved.queueIds.length)return false;
  const map=new Map(cards.map(c=>[c.id,c]));const queue=saved.queueIds.map(id=>map.get(id)).filter(Boolean);if(!queue.length)return false;
- filtered=queue;queueMode=true;learningSession=saved.queueSession&&typeof saved.queueSession==='object'?saved.queueSession:{startedAt:Date.now(),ids:queue.map(c=>c.id),results:[]};index=Math.max(0,Math.min(queue.length-1,Number(saved.index)||0));flipped=false;
- const banner=document.querySelector('#studyQueueBanner');if(banner){banner.hidden=false;banner.innerHTML=`<div><strong>Wznawianie sesji nauki · karta ${index+1} z ${filtered.length}</strong><span>Przywrócono kolejkę z poprzedniej wizyty. Odpowiedź pozostaje ukryta.</span></div><button type="button" id="exitStudyQueueResume">Wróć do wszystkich fiszek</button>`;banner.querySelector('#exitStudyQueueResume').onclick=()=>{queueMode=false;banner.hidden=true;apply()};}
+ filtered=queue;queueMode=true;sessionReport=null;setStudyMode(true);learningSession=saved.queueSession&&typeof saved.queueSession==='object'?saved.queueSession:{startedAt:Date.now(),ids:queue.map(c=>c.id),results:[]};index=Math.max(0,Math.min(queue.length-1,Number(saved.index)||0));flipped=false;
+ const banner=document.querySelector('#studyQueueBanner');if(banner){banner.hidden=false;banner.innerHTML=`<div><strong>Sesja · karta ${index+1} z ${filtered.length}</strong></div><button type="button" id="exitStudyQueueResume">Zakończ</button>`;banner.querySelector('#exitStudyQueueResume').onclick=()=>finishLearningQueue();}
  render();return true;
 }
 function transferPrompt(c){
@@ -2270,9 +2526,9 @@ function startLearningQueue(){
  const buckets=new Map();candidates.forEach((c,i)=>{const key=c.category||'Inne';if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push({c,i})});
  const ordered=[];let lastCategory='';
  while(ordered.length<candidates.length){let choices=[...buckets.entries()].filter(([k,v])=>v.length&&k!==lastCategory);if(!choices.length)choices=[...buckets.entries()].filter(([k,v])=>v.length);choices.sort((a,b)=>a[1][0].i-b[1][0].i);const chosen=choices[0];if(!chosen)break;ordered.push(chosen[1].shift().c);lastCategory=chosen[0]}
- const sessionSize=document.querySelector('#sessionSize')?.value||'10',requestedCount=sessionSize==='all'?ordered.length:Number(sessionSize)||10;filtered=ordered.slice(0,Math.min(requestedCount,ordered.length));index=0;flipped=false;queueMode=true;learningSession={startedAt:Date.now(),ids:filtered.map(c=>c.id),results:[]};
- const banner=document.querySelector('#studyQueueBanner');banner.hidden=false;banner.innerHTML=`<div><strong>Sesja nauki · ${filtered.length} kart</strong><span>Wybrano z aktualnych wyników filtrowania. ${due.length} z nich ma zaplanowaną powtórkę. Pytanie → pokaż odpowiedź → oceń → następna karta.</span></div><button type="button" id="exitStudyQueueStart">Zakończ sesję</button>`;
- banner.querySelector('#exitStudyQueueStart').onclick=()=>{queueMode=false;banner.hidden=true;index=0;apply()};updateFilterSummary();render();
+ const sessionSize=document.querySelector('#sessionSize')?.value||'10',requestedCount=sessionSize==='all'?ordered.length:Number(sessionSize)||10;filtered=ordered.slice(0,Math.min(requestedCount,ordered.length));index=0;flipped=false;queueMode=true;sessionReport=null;setStudyMode(true);learningSession={startedAt:Date.now(),ids:filtered.map(c=>c.id),results:[]};
+ const banner=document.querySelector('#studyQueueBanner');banner.hidden=false;banner.innerHTML=`<div><strong>Sesja · karta 1 z ${filtered.length}</strong></div><button type="button" id="exitStudyQueueStart">Zakończ</button>`;
+ banner.querySelector('#exitStudyQueueStart').onclick=()=>finishLearningQueue();updateFilterSummary();render();
 }
 
 function richLong(s){
@@ -2349,24 +2605,38 @@ function flashcardExampleMarkup(c){
  const example=String(c.example||'').trim();
  if(!example)return '';
  const lines=example.split('\n').length;
- const block=`<div class="section"><div class="label">PRZYKŁAD</div><pre class="example"><code>${esc(example)}</code></pre></div>`;
+ const block=`<div class="section"><div class="label">PRZYKŁAD</div><pre class="example"><code>${highlightCode(esc(example))}</code></pre></div>`;
  // Keep short examples visible; tuck long snippets away until the learner needs them.
  if(example.length<=260&&lines<=6)return block;
- return `<details class="section example-details"><summary>Przykład · ${lines} linii</summary><div class="label">KOD / PRZYKŁAD</div><pre class="example"><code>${esc(example)}</code></pre></details>`;
+ return `<details class="section example-details"><summary>Przykład · ${lines} linii</summary><div class="label">KOD / PRZYKŁAD</div><pre class="example"><code>${highlightCode(esc(example))}</code></pre></details>`;
 }
 function render(){
  saveFlashcardUiState();
  renderStats();
  updateFilterSummary();
  const mount=document.querySelector('#mount'),list=document.querySelector('#list'),controls=document.querySelector('#controls');
- if(queueMode){const banner=document.querySelector('#studyQueueBanner');const strong=banner?.querySelector('strong');if(strong)strong.textContent=`Sesja nauki · karta ${index+1} z ${filtered.length}`;}
+ if(queueMode){const banner=document.querySelector('#studyQueueBanner');const strong=banner?.querySelector('strong');if(strong)strong.textContent=`Sesja · karta ${index+1} z ${filtered.length}`;}
+ if(sessionReport){
+  const report=sessionReport;
+  const streak=studyStreakCount(readFlashcardUiState().studyDays||[]);
+  const streakHtml=streak?`<p class="session-streak">Seria: ${streak} ${streak===1?'dzień':'dni'} z rzędu</p>`:'';
+  mount.innerHTML=`<section class="session-done-card" aria-live="polite"><p class="label">SESJA SKOŃCZONA</p><h2>${report.completed} z ${report.total}</h2><p class="session-done-lead">ocenionych kart · ${report.mins} min</p><div class="session-done-metrics"><span><b>${report.again}</b> nie pamiętałem</span><span><b>${report.partial}</b> częściowo</span><span><b>${report.good}</b> umiem</span></div>${streakHtml}<p class="session-note">${esc(report.note||'')}</p></section>`;
+  list.innerHTML='';
+  const bar=document.querySelector('#progressBar');if(bar)bar.style.width='100%';
+  controls.innerHTML=`<button class="statebtn primary-action" id="anotherSession">Jeszcze jedna sesja</button><button class="statebtn" id="backToDeck">Wróć do talii</button>`;
+  controls.querySelector('#anotherSession').onclick=()=>{sessionReport=null;apply();startLearningQueue()};
+  controls.querySelector('#backToDeck').onclick=()=>{sessionReport=null;apply()};
+  const doneBanner=document.querySelector('#studyQueueBanner');if(doneBanner)doneBanner.hidden=true;
+  setStudyMode(false);
+  return;
+ }
  if(!filtered.length){mount.innerHTML='<div class="empty"><h3>Nie znaleziono fiszek</h3><p>Zmień frazę albo wybierz „Wyczyść filtry”, aby wrócić do całej talii.</p><div class="empty-actions"><button type="button" class="toolbtn primary" id="emptyClearFilters">Wyczyść filtry</button></div></div>';const clear=document.querySelector('#emptyClearFilters');if(clear)clear.onclick=clearFlashcardFilters;list.innerHTML='';controls.innerHTML='';return}
  const c=filtered[index],s=getSourceInfo(c.source_id),statusLabel={review:'DO POWTÓRZENIA',known:'ZNANE',unknown:'NIEZNANE'}[c.status];
  const whyText=c.why||'Najpierw nazwij problem, potem mechanizm i dopiero narzędzie. Sprawdź, co ta decyzja daje i jaki koszt wprowadza.',watchText=c.watch||'**Uważaj:** sprawdź dane wejściowe, failure mode, retry, duplicate i wpływ na bezpieczeństwo.';
  mount.innerHTML=`<div class="card-wrap"><div class="card ${flipped?'flipped':''}" id="card">
  <article class="face front"><div class="cardhead"><span class="badge"><i class="dot"></i>${esc(c.category)}</span><span class="number">${index+1} / ${filtered.length} · ${statusLabel}</span></div>
  <div class="content"><div class="label">PYTANIE</div><div class="question">${rich(c.question)}</div>
- <details class="optional-recall"><summary>Twoja odpowiedź (opcjonalnie)</summary><div class="recall-box"><label for="recall-${esc(c.id)}">Spróbuj odpowiedzieć z pamięci</label><textarea id="recall-${esc(c.id)}" placeholder="Zapisz kilka słów, zanim odsłonisz wzorcową odpowiedź. Możesz też pominąć notatkę.">${esc(recallDrafts()[c.id]||'')}</textarea><div class="recall-tip">Notatka zapisuje się lokalnie. Najważniejsze jest samodzielne przypomnienie, nie idealne sformułowanie.</div><fieldset class="confidence-check"><legend>Jak dobrze ją pamiętasz?</legend><div class="confidence-options">${[{v:1,t:'Nie pamiętam'},{v:2,t:'Częściowo'},{v:3,t:'Pewnie'}].map(o=>`<button type="button" class="confidence-option ${confidenceLevel(c.id)===o.v?'selected':''}" data-confidence="${o.v}" aria-pressed="${confidenceLevel(c.id)===o.v?'true':'false'}">${o.t}</button>`).join('')}</div><small>${esc(confidencePrompt(c))}</small></fieldset><div class="recall-saved" id="recallSaved" aria-live="polite"></div></div></details></div></article>
+ <details class="optional-recall"><summary>Twoja odpowiedź (opcjonalnie)</summary><div class="recall-box"><label for="recall-${esc(c.id)}">Spróbuj odpowiedzieć z pamięci</label><textarea id="recall-${esc(c.id)}" placeholder="Zapisz kilka słów, zanim odsłonisz wzorcową odpowiedź. Możesz też pominąć notatkę.">${esc(recallDrafts()[c.id]||'')}</textarea><div class="recall-tip">Notatka zapisuje się lokalnie. Najważniejsze jest samodzielne przypomnienie, nie idealne sformułowanie.</div><div class="recall-saved" id="recallSaved" aria-live="polite"></div></div></details></div></article>
  <article class="face back"><div class="cardhead"><span class="badge"><i class="dot" style="background:var(--green)"></i>ODPOWIEDŹ</span><span class="number">${esc(c.source_deck||'')}</span></div>
  <div class="content answer-content">
  <div class="answer-lead"><div class="label">KRÓTKA ODPOWIEDŹ</div><div class="answer answer-primary">${richLong(c.answer)}</div></div>
@@ -2387,11 +2657,11 @@ function render(){
  </div></article></div></div>`;
  document.querySelector('#card').onclick=null;
  const recall=document.getElementById('recall-'+c.id);if(recall){recall.addEventListener('input',()=>{saveRecallDraft(c.id,recall.value);const saved=document.querySelector('#recallSaved');if(saved)saved.textContent='Notatka zapisana lokalnie';});recall.addEventListener('click',e=>e.stopPropagation());}mount.querySelectorAll('[data-confidence]').forEach(b=>b.onclick=e=>{e.stopPropagation();saveConfidence(c.id,b.dataset.confidence);mount.querySelectorAll('[data-confidence]').forEach(x=>{const active=x===b;x.classList.toggle('selected',active);x.setAttribute('aria-pressed',active?'true':'false')});const saved=document.querySelector('#recallSaved');if(saved)saved.textContent='Pewność zapisana. Po odsłonięciu porównaj ją z tym, co faktycznie pamiętałeś.'});
- controls.innerHTML=`${!flipped?`<button class="statebtn primary-action" id="revealAnswer">Pokaż odpowiedź</button>`:`<div class="grade-prompt" role="note">Jak poszło bez podglądania? Wybierz ocenę, która najlepiej opisuje pamięć.</div><button class="gradebtn again" data-grade="again" title="Nie przypomniałem sobie odpowiedzi">Nie pamiętałem</button><button class="gradebtn partial" data-grade="partial" title="Pamiętałem tylko część odpowiedzi">Częściowo</button><button class="gradebtn good" data-grade="good" title="Potrafię wyjaśnić własnymi słowami">Umiem wyjaśnić</button><button class="gradebtn easy" data-grade="easy" title="Odpowiedź przyszła łatwo i bez wysiłku">Łatwe</button><button class="statebtn" id="backToQuestion">Wróć do pytania</button>`}<button class="statebtn nav-card" id="prev">← Poprzednia</button><button class="statebtn nav-card" id="next">Następna →</button>`;
+ controls.innerHTML=`${!flipped?`<button class="statebtn primary-action" id="revealAnswer">Pokaż odpowiedź</button>`:`<div class="grade-prompt" role="note">Jak poszło?</div><div class="grade-grid"><button class="gradebtn again" data-grade="again" title="Nie przypomniałem sobie odpowiedzi">Nie pamiętałem</button><button class="gradebtn partial" data-grade="partial" title="Pamiętałem tylko część odpowiedzi">Częściowo</button><button class="gradebtn good" data-grade="good" title="Potrafię wyjaśnić własnymi słowami">Umiem wyjaśnić</button><button class="gradebtn easy" data-grade="easy" title="Odpowiedź przyszła łatwo i bez wysiłku">Łatwe</button></div><button class="statebtn quiet" id="backToQuestion">Wróć do pytania</button>`}${queueMode?'':`<button class="statebtn nav-card" id="prev">← Poprzednia</button><button class="statebtn nav-card" id="next">Następna →</button>`}`;
  const reveal=controls.querySelector('#revealAnswer');if(reveal)reveal.onclick=()=>{flipped=true;render()};
  const back=controls.querySelector('#backToQuestion');if(back)back.onclick=()=>{flipped=false;render()};
  controls.querySelectorAll('[data-grade]').forEach(b=>b.onclick=()=>{gradeFlashcard(c,b.dataset.grade);move(1)});
- controls.querySelectorAll('[data-state]').forEach(b=>b.onclick=e=>setStatus(e.currentTarget.dataset.state));controls.querySelector('#prev').onclick=()=>move(-1);controls.querySelector('#next').onclick=()=>move(1);
+ controls.querySelectorAll('[data-state]').forEach(b=>b.onclick=e=>setStatus(e.currentTarget.dataset.state));const prevBtn=controls.querySelector('#prev'),nextBtn=controls.querySelector('#next');if(prevBtn)prevBtn.onclick=()=>move(-1);if(nextBtn)nextBtn.onclick=()=>move(1);
  list.innerHTML=filtered.slice(Math.max(0,index-25),Math.min(filtered.length,index+26)).map((x,j)=>{const real=Math.max(0,index-25)+j;return `<button class="item ${real===index?'active':''}" data-i="${real}"><b>${esc(x.question)}</b><span>${esc(x.category)} · ${x.status}</span></button>`}).join('');list.querySelectorAll('.item').forEach(b=>b.onclick=()=>{index=+b.dataset.i;flipped=false;render()});document.querySelector('#progressBar').style.width=((index+1)/filtered.length*100)+'%';}
 let answerBrowserPage=0;
 function renderAnswerBrowser(){
@@ -2413,11 +2683,11 @@ function finishLearningQueue(){
  const mins=Math.max(1,Math.round((Date.now()-(session.startedAt||Date.now()))/60000));
  const mismatch=results.filter(r=>r.calibration==='overconfident').length;
  const completed=new Set(results.map(r=>r.id)).size;
- queueMode=false;index=0;filtered=[];flipped=false;
- const banner=document.querySelector('#studyQueueBanner');banner.hidden=false;
- banner.innerHTML=`<div class="learning-summary"><strong>Sesja zakończona · ${completed}/${(session.ids||[]).length} kart ocenionych</strong><div class="learning-summary-metrics"><span><b>${count('again')}</b> do szybkiej powtórki</span><span><b>${count('partial')}</b> częściowe</span><span><b>${count('good')+count('easy')}</b> udane przypomnienia</span><span><b>${mins} min</b> czasu</span></div><p>${mismatch?`${mismatch} ${mismatch===1?'razie':'razy'} deklarowana pewność była wyższa niż rzeczywiste przypomnienie. Wróć do tych pojęć z mniejszą pewnością i sprawdź, co umiesz wyjaśnić bez podglądu.`:'W następnej sesji nadal oceniaj odpowiedź na podstawie tego, co odtworzyłeś przed odsłonięciem, nie na podstawie tego, jak znajomo wygląda wzorzec.'}</p></div><button type="button" id="exitStudyQueueFinish">Wróć do wszystkich fiszek</button>`;
- safeStorageSet(APP_UI_KEY,{...readFlashcardUiState(),queueMode:false,queueIds:[],queueSession:session,index:0,updatedAt:Date.now()});
- banner.querySelector('#exitStudyQueueFinish').onclick=()=>{banner.hidden=true;index=0;apply()};
+ const total=(session.ids||[]).length;
+ queueMode=false;index=0;flipped=false;
+ sessionReport={completed,total,again:count('again'),partial:count('partial'),good:count('good')+count('easy'),mins,note:mismatch?(mismatch+' '+(mismatch===1?'raz':'razy')+' pewność była wyższa niż to, co udało się przypomnieć.'):'Oceń według tego, co pamiętałeś, zanim zobaczyłeś odpowiedź.'};
+ const banner=document.querySelector('#studyQueueBanner');if(banner)banner.hidden=true;
+ setStudyMode(false);
  render();
 }
 function move(delta){if(!filtered.length)return;if(queueMode&&delta>0&&index>=filtered.length-1){finishLearningQueue();return}index=(index+delta+filtered.length)%filtered.length;flipped=false;render()}
@@ -2432,10 +2702,14 @@ document.querySelector('#markMatchingKnown').onclick=()=>markMatching('known');d
 document.querySelector('#clearFilters').onclick=clearFlashcardFilters;document.querySelector('#search').oninput=()=>{index=0;apply();saveFlashcardUiState()};document.querySelector('#categoryPickerTrigger').onclick=()=>setCategoryPickerOpen(document.querySelector('#categoryPickerPanel').hidden);document.querySelector('#categoryPickerSearch').oninput=syncCategoryPicker;document.querySelector('#categoryPickerDone').onclick=()=>setCategoryPickerOpen(false);document.querySelector('#categorySelectAll').onclick=()=>{const el=document.querySelector('#category');[...el.options].forEach(o=>o.selected=o.value!=='all');syncCategoryPicker();index=0;apply();saveFlashcardUiState()};document.querySelector('#categoryClearAll').onclick=()=>{const el=document.querySelector('#category');[...el.options].forEach(o=>o.selected=o.value==='all');syncCategoryPicker();index=0;apply();saveFlashcardUiState()};document.addEventListener('click',e=>{const picker=document.querySelector('#categoryPicker');if(picker&&!picker.contains(e.target))setCategoryPickerOpen(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('#categoryPickerPanel').hidden)setCategoryPickerOpen(false)});document.querySelector('#status').onchange=()=>{index=0;apply();saveFlashcardUiState()};document.querySelector('#source').onchange=()=>{index=0;apply();saveFlashcardUiState()};document.querySelector('#random').onclick=()=>{if(!filtered.length){updateFlashcardControlState();return}const previous=index;if(filtered.length>1){let next=previous;while(next===previous)next=Math.floor(Math.random()*filtered.length);index=next}else index=0;flipped=false;render();const count=document.querySelector('#filterCount');if(count)count.textContent=`Losowa fiszka ${index+1} z ${filtered.length} pasujących`;};document.querySelector('#sessionSize').onchange=()=>{updateFlashcardControlState();saveFlashcardUiState()};document.querySelector('#studyQueue').onclick=startLearningQueue;document.querySelector('#add').onclick=()=>openModal('add');document.querySelector('#sources').onclick=()=>openModal('sources');document.querySelector('#export').onclick=exportFullBackup;document.querySelector('#importBtn').onclick=()=>document.querySelector('#importFile').click();document.querySelector('#importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x.cards))throw Error('bad');if(x.backupType==='senior-frontend-learning-platform'&&x.storage&&typeof x.storage==='object'){if(!confirm('Przywrócić pełną kopię zapasową? Zastąpi ona lokalny postęp i ustawienia dla kluczy zapisanych w kopii.'))return;for(const key of BACKUP_KEYS){if(Object.prototype.hasOwnProperty.call(x.storage,key))safeStorageSet(key,x.storage[key]);}const savedDeck=readStorageJson(STORAGE,{});const incomingCustom=x.cards.filter(c=>c&&c.id&&(c.kind==='user'||String(c.id).startsWith('user-')||String(c.id).startsWith('import-')||c.source_deck==='Moje fiszki'));const currentCustom=Array.isArray(savedDeck.customCards)?savedDeck.customCards:[];const customMap=new Map([...currentCustom,...incomingCustom].map(c=>[c.id,c]));safeStorageSet(STORAGE,{...savedDeck,customCards:[...customMap.values()]});alert('Przywrócono kopię zapasową. Strona odświeży się, aby odtworzyć zapisany postęp.');location.reload();return;}const imported=x.cards.map(c=>({...c,id:c.id||'import-'+crypto.randomUUID(),status:c.status||'review'}));const ids=new Set(cards.map(c=>c.id));let added=0;for(const c of imported){if(!ids.has(c.id)){cards.push(c);ids.add(c.id);added++}}persist();populate();restoreFlashcardUiState();apply();if(!resumeSavedLearningQueue())saveFlashcardUiState();alert('Zaimportowano '+imported.length+' rekordów; dodano '+added+' nowych kart.');}catch(err){alert('Nieprawidłowy JSON lub uszkodzona kopia zapasowa.')}};r.readAsText(f)};document.querySelector('#reset').onclick=()=>{if(confirm('Zresetować wszystkie statusy do „do powtórzenia”?')){cards.forEach(c=>c.status='review');persist();apply()}};
 document.addEventListener('keydown',e=>{
  const active=document.activeElement;
- if(document.querySelector('#modal.open')||['INPUT','TEXTAREA','SELECT','BUTTON','A','SUMMARY'].includes(active?.tagName)||active?.isContentEditable||e.altKey||e.ctrlKey||e.metaKey)return;
- if(e.key===' '){e.preventDefault();flipped=!flipped;render();document.querySelector('#controls')?.focus({preventScroll:true})}
- else if(e.key==='ArrowRight'){e.preventDefault();move(1)}
- else if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}
+ if(sessionReport||document.querySelector('#modal.open')||['INPUT','TEXTAREA','SELECT','BUTTON','A','SUMMARY'].includes(active?.tagName)||active?.isContentEditable||e.altKey||e.ctrlKey||e.metaKey)return;
+ if(e.key===' '){
+  e.preventDefault();
+  if(!flipped){flipped=true;render();document.querySelector('#controls')?.focus({preventScroll:true})}
+  else if(!queueMode){flipped=false;render();document.querySelector('#controls')?.focus({preventScroll:true})}
+ }
+ else if(!queueMode&&e.key==='ArrowRight'){e.preventDefault();move(1)}
+ else if(!queueMode&&e.key==='ArrowLeft'){e.preventDefault();move(-1)}
  else if(flipped&&/^[1-4]$/.test(e.key)){
   if(e.repeat)return;
   const current=filtered[index];if(!current)return;
@@ -2952,9 +3226,7 @@ function restoreTrainingUiState(){
   const drawerSummary = drawer ? drawer.querySelector('summary') : null;
   const openFilters = document.getElementById('openFilters');
   const bar = document.getElementById('mobileStudyBar');
-  const launch = document.querySelector('#flashcardsHub .session-launch');
-  const tools = document.querySelector('#flashcardsHub .tools');
-  const launchAnchor = launch ? launch.nextElementSibling : null;
+  const studyBtn = document.getElementById('studyQueue');
   const lead = document.querySelector('.lead-more');
   let leadTouched = false;
   let drawerInitialized = false;
@@ -2970,18 +3242,16 @@ function restoreTrainingUiState(){
     openFilters.textContent = open ? 'Ukryj filtry' : (filtersLookActive() ? 'Filtry · aktywne' : 'Filtry');
   }
   function placeSessionLaunch(){
-    if(!launch || !bar || !tools) return;
+    if(!studyBtn || !bar) return;
+    if(studyBtn.parentElement !== bar) bar.appendChild(studyBtn);
     if(mobileQuery.matches){
-      if(launch.parentElement !== bar) bar.appendChild(launch);
       root.classList.add('ux-mobile');
-      if(drawer && !drawerInitialized){ drawer.open = false; drawerInitialized = true; }
       if(drawerSummary) drawerSummary.tabIndex = -1;
     }else{
-      if(launch.parentElement !== tools) tools.insertBefore(launch, launchAnchor);
       root.classList.remove('ux-mobile');
-      if(drawer) drawer.open = true;
       if(drawerSummary) drawerSummary.tabIndex = 0;
     }
+    if(drawer && !drawerInitialized){ drawer.open = false; drawerInitialized = true; }
     syncFilterButton();
   }
   function syncLead(){
@@ -3047,6 +3317,7 @@ function restoreTrainingUiState(){
   let startX = 0, startY = 0, tracking = false, lastNavAt = 0;
   const interactive = 'textarea, input, select, button, a, summary, pre, .example, .code-block, .cheat-code, .category-picker-panel, .answer-browser';
   function beginGesture(target, x, y){
+    if(document.body.classList.contains('is-studying')) return false;
     if(target && target.closest && target.closest(interactive)) return false;
     tracking = true;
     startX = x;
@@ -3089,6 +3360,22 @@ function restoreTrainingUiState(){
     finishGesture(touch.clientX, touch.clientY);
   }, {passive:true});
   mount.addEventListener('touchcancel', function(){ tracking = false; });
+
+  const search = document.getElementById('search');
+  const clearSearch = document.getElementById('clearSearch');
+  function syncClear(){ if(clearSearch && search) clearSearch.hidden = !String(search.value||'').trim(); }
+  if(search && clearSearch){
+    search.addEventListener('input', syncClear);
+    clearSearch.addEventListener('click', function(){
+      search.value = '';
+      search.dispatchEvent(new Event('input', {bubbles:true}));
+      search.focus();
+    });
+    syncClear();
+  }
+  if('serviceWorker' in navigator && location.protocol.indexOf('http')===0 && location.hostname!=='localhost' && location.hostname!=='127.0.0.1'){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
 })();
 
 </script>
