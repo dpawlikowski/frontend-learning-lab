@@ -1652,14 +1652,329 @@ a[href][aria-disabled="true"],button:disabled,input:disabled,select:disabled,tex
 </style>
 
 <style id="ux-polish-v46">.flashcard-bulk-tools #markMatchingKnown,.flashcard-bulk-tools #markMatchingUnknown,.flashcard-bulk-tools #markMatchingReview{min-height:40px}.answer-browser-item .ab-actions button{min-height:36px;cursor:pointer}.answer-browser-item .ab-actions button:focus-visible,.flashcard-bulk-tools button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}@media(max-width:700px){.flashcard-bulk-tools #markMatchingKnown,.flashcard-bulk-tools #markMatchingUnknown,.flashcard-bulk-tools #markMatchingReview{flex:1 1 100%}}</style>
+<style id="ux-readability-v54">
+/* V54: mobile-first readability, hierarchy, and study flow.
+   Presentation and interaction polish only. Card data, review intervals,
+   and localStorage keys are unchanged. */
+:root{
+  --bg:#0b1220;
+  --text:#f4f7ff;
+  --muted:#c9d6ea;
+  --line:#355278;
+  --tap:48px;
+  --measure:66ch;
+  --focus:#b9dcff;
+}
+html{color-scheme:dark;scroll-padding-top:76px}
+body{
+  background:
+    radial-gradient(1100px 480px at -10% -10%, rgba(36,78,140,.42), transparent 55%),
+    radial-gradient(820px 380px at 110% 0%, rgba(24,72,84,.28), transparent 50%),
+    var(--bg) !important;
+  color:var(--text);
+  font-size:16px !important;
+  line-height:1.6;
+  letter-spacing:0;
+}
+body:before{animation:none !important;opacity:.05 !important}
+::selection{background:#1d4f93;color:#fff}
+.skip-link{
+  position:absolute;left:12px;top:10px;z-index:10000;
+  padding:12px 14px;border-radius:12px;
+  background:#e7f2ff;color:#07111f;font-weight:800;text-decoration:none;
+  transform:translateY(-160%);
+}
+.skip-link:focus,.skip-link:focus-visible{transform:none;outline:3px solid var(--focus);outline-offset:3px}
+
+.eyebrow{font-size:13px !important;letter-spacing:.08em !important;line-height:1.4 !important}
+.title{
+  font-size:clamp(1.7rem, 3.4vw, 2.55rem) !important;
+  line-height:1.14 !important;
+  letter-spacing:-.03em !important;
+  margin:8px 0 10px !important;
+  font-weight:760;
+}
+.lead{font-size:1rem !important;line-height:1.65 !important;color:var(--muted) !important;max-width:68ch}
+.lead-more>summary{
+  display:flex;align-items:center;min-height:44px;cursor:pointer;
+  color:#d5e4f8;font-weight:750;list-style:none;
+}
+.lead-more>summary::-webkit-details-marker{display:none}
+.lead-more>summary::after{content:" ↓";color:#8ee9dc;font-weight:700}
+.lead-more[open]>summary::after{content:" ↑"}
+.stat{border-radius:14px}
+.stat b{font-size:1.35rem !important;letter-spacing:-.03em}
+.stat span{font-size:13px !important;line-height:1.3 !important;color:#d5e2f4 !important}
+
+#hubnav{
+  gap:8px !important;
+  padding:8px !important;
+  border-radius:16px !important;
+  -webkit-overflow-scrolling:touch;
+}
+#hubnav button{
+  min-height:44px !important;
+  padding:8px 14px !important;
+  font-size:14px !important;
+  line-height:1.2 !important;
+  border-radius:999px !important;
+  font-weight:700 !important;
+}
+#hubnav button.active{box-shadow:inset 0 0 0 1px rgba(185,220,255,.45), 0 8px 18px rgba(0,0,0,.18) !important}
+@media (min-width:1180px){
+  #hubnav{flex-wrap:wrap !important;overflow:visible !important}
+}
+
+#flashcardsHub.active{display:flex !important;flex-direction:column;gap:14px}
+#flashcardsHub .toolbar{position:static !important;top:auto !important;border-radius:18px}
+.mobile-study-bar{display:none}
+.filter-drawer>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:48px;padding:0 2px;cursor:pointer;font-weight:750;color:#e7f1ff;list-style:none;
+}
+.filter-drawer>summary::-webkit-details-marker{display:none}
+.filter-drawer-body{min-width:0}
+html.ux-mobile #flashcardsHub #mobileStudyBar{
+  display:grid !important;
+  grid-template-columns:max-content minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+  width:100% !important;
+  height:auto !important;
+  margin:0 0 8px !important;
+}
+html.ux-mobile .filter-drawer>summary{
+  position:absolute !important;width:1px !important;height:1px !important;
+  overflow:hidden !important;clip:rect(0 0 0 0) !important;clip-path:inset(50%) !important;
+}
+html.ux-mobile #filterDrawer:not([open]) > .filter-drawer-body{display:none !important}
+html.ux-mobile #flashcardsHub #openFilters{
+  width:auto !important;min-width:104px !important;max-width:none !important;height:48px !important;
+  padding:10px 14px !important;border-radius:12px;font-weight:800;white-space:nowrap !important;
+}
+html.ux-mobile #flashcardsHub #mobileStudyBar > .session-launch{
+  display:grid !important;
+  grid-column:auto !important;
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+  grid-auto-rows:auto !important;
+  gap:8px !important;margin:0 !important;padding:0 !important;border:0 !important;
+  background:transparent !important;width:auto !important;max-width:100% !important;min-width:0 !important;height:auto !important;
+}
+html.ux-mobile #flashcardsHub #mobileStudyBar .session-launch label{
+  position:absolute !important;width:1px !important;height:1px !important;overflow:hidden !important;clip:rect(0 0 0 0) !important;
+}
+html.ux-mobile #flashcardsHub #mobileStudyBar #sessionSize,
+html.ux-mobile #flashcardsHub #mobileStudyBar #studyQueue{
+  width:100% !important;min-width:0 !important;height:auto !important;min-height:48px !important;
+  max-height:none !important;font-size:15px !important;white-space:normal !important;line-height:1.2 !important;
+  grid-column:auto !important;
+}
+html.ux-mobile #flashcardsHub .subtools{flex-wrap:wrap !important;overflow:visible !important}
+html.ux-mobile .study-long{display:none !important}
+html.ux-mobile .study-short{display:inline !important}
+@media (min-width:801px){
+  .mobile-study-bar{display:none !important}
+  .filter-drawer>summary{display:none}
+  .filter-drawer>.filter-drawer-body{display:block !important}
+}
+
+#flashcardsHub .field,#flashcardsHub .select,#flashcardsHub .toolbtn,
+input,select,textarea{font-size:16px !important}
+#flashcardsHub .toolbtn,#flashcardsHub .field,#flashcardsHub .select,
+.train-btn,.train-tab,.train-answer{min-height:44px}
+#flashcardsHub .filter-field>span,#flashcardsHub .filter-help span,
+#flashcardsHub .filter-help strong{font-size:14px !important;line-height:1.45 !important}
+#flashcardsHub .subtools,#flashcardsHub .flashcard-bulk-tools{margin-inline:0 !important;max-width:100%}
+#flashcardsHub #category.category-state{padding:0 !important;border:0 !important;min-height:0 !important;margin:0 !important}
+
+#flashcardsHub .progress{height:8px;margin:0 0 12px;border-radius:999px}
+#flashcardsHub .progress i{border-radius:999px}
+#flashcardsHub .card,
+#flashcardsHub .card.flipped,
+#flashcardsHub .face,
+#flashcardsHub .face.front,
+#flashcardsHub .face.back{
+  min-height:0 !important;
+  height:auto !important;
+}
+#flashcardsHub .cardhead{position:static !important;padding:16px 18px !important;gap:10px}
+#flashcardsHub .badge,#flashcardsHub .number{font-size:13px !important;line-height:1.35 !important;letter-spacing:.02em}
+#flashcardsHub .content{padding:8px 18px 22px !important}
+#flashcardsHub .label,.sideTitle,.train-label,.train-kicker{
+  font-size:12px !important;letter-spacing:.08em !important;line-height:1.4 !important;
+}
+#flashcardsHub .question{
+  font-size:clamp(1.35rem, 4.8vw, 2.05rem) !important;
+  line-height:1.32 !important;
+  letter-spacing:-.02em !important;
+  margin:8px 0 16px !important;
+  max-width:22em;
+  overflow-wrap:anywhere;
+  text-wrap:pretty;
+}
+#flashcardsHub .answer,#flashcardsHub .answer-primary,#flashcardsHub .take,#flashcardsHub .explain-box{
+  font-size:1.0625rem !important;
+  line-height:1.7 !important;
+  max-width:var(--measure) !important;
+}
+#flashcardsHub .answer p{margin:0 0 0.85em !important}
+#flashcardsHub .answer-primary{padding:16px !important}
+#flashcardsHub .pre-answer-judgement p{font-size:1rem !important;line-height:1.45 !important}
+#flashcardsHub .confidence-options-primary .confidence-option{min-height:48px;font-size:15px}
+#flashcardsHub .optional-recall>summary{font-size:15px !important}
+#flashcardsHub .flipHint{font-size:14px !important;line-height:1.55 !important;color:#d3e0f2 !important;max-width:42rem}
+#flashcardsHub .grade-prompt{font-size:15px !important;line-height:1.5 !important}
+#flashcardsHub #controls{gap:8px}
+#flashcardsHub #controls button{min-height:48px;font-size:15px;border-radius:12px}
+#flashcardsHub #controls .primary-action{font-size:16px !important}
+@media (max-width:800px){
+  #flashcardsHub #controls{display:grid !important;grid-template-columns:1fr 1fr;position:static !important}
+  #flashcardsHub #controls .primary-action,
+  #flashcardsHub #controls .grade-prompt,
+  #flashcardsHub #controls #backToQuestion{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  #flashcardsHub #controls{grid-template-columns:1fr !important}
+  #flashcardsHub #controls .gradebtn,
+  #flashcardsHub #controls .nav-card{grid-column:1 / -1 !important}
+}
+#flashcardsHub .face{animation:ux-card-in .22s ease}
+@keyframes ux-card-in{from{opacity:.35}to{opacity:1}}
+
+@media (max-width:1050px){
+  #flashcardsHub .layout{display:block !important}
+  #flashcardsHub .sidebar{display:block !important;position:static !important;margin-top:14px;padding:14px !important}
+  #flashcardsHub .sidebar .list{
+    display:grid !important;grid-auto-flow:row !important;
+    max-height:320px;overflow:auto;gap:8px;padding-bottom:0;
+  }
+  #flashcardsHub .sidebar .list>*{flex:none !important;width:auto !important;max-width:none !important;scroll-snap-align:unset !important}
+  #flashcardsHub .sidebar .legend{display:grid !important}
+}
+#flashcardsHub .item{min-height:44px;padding:10px 12px !important}
+#flashcardsHub .item b{
+  white-space:normal !important;
+  display:-webkit-box !important;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  font-size:14px !important;
+  line-height:1.35 !important;
+}
+#flashcardsHub .item span{font-size:13px !important}
+#flashcardsHub .item.active{box-shadow:inset 3px 0 0 #7bded4}
+
+.example,.code-block,.cheat-code,.sd10-code,.career-code,pre{
+  white-space:pre-wrap !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  font-size:14px !important;
+  line-height:1.6 !important;
+  max-width:100% !important;
+  tab-size:2;
+}
+.answer code,.take code,.question code{
+  font-size:.92em !important;
+  overflow-wrap:anywhere;
+}
+.diagram,.sd10-figure,.table-wrap,.v14-panel,.career-panel,.prose-card,.cheat,.deep-sd-card,.sd10-section{
+  max-width:100%;
+}
+.diagram,.sd10-figure,.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.v14-table,.career-table,.sd-mini-table{font-size:14px !important;line-height:1.5 !important}
+.cheatitem p,.cheatitem h4,.glossary-item span,.career-panel p,.career-panel li,
+.v14-panel p,.v14-panel li,.prose-card p,.prose-card li,.arch-card p{
+  font-size:1rem !important;line-height:1.65 !important;
+}
+.career-metric span,.train-stat span,.train-pill,.train-session-metrics span,
+.train-rubric-score small,.train-rubric-choice span,.chip,kbd,.storage-status-wrap,
+#storageStatus,footer,.code-caption,.cheat-meta{
+  font-size:13px !important;line-height:1.45 !important;letter-spacing:.01em !important;
+}
+footer{color:#c9d6ea !important}
+.train-hero h1{font-size:clamp(1.7rem, 4vw, 2.4rem) !important;line-height:1.16 !important}
+.train-prompt{font-size:clamp(1.2rem, 2.5vw, 1.55rem) !important;line-height:1.4 !important}
+.train-answer{font-size:16px !important;line-height:1.6 !important}
+.train-muted,.train-feedback,.hubIntro p,.hero-block p,.sd10-hero p,.v14-hero p,.career-hero p{
+  font-size:1rem !important;line-height:1.65 !important;
+}
+.study-short{display:none}
+@media (max-width:800px){
+  .app{padding:14px !important}
+  .top{gap:12px !important;margin-bottom:12px !important}
+  .stats{display:grid !important;grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:6px !important}
+  .stat{padding:8px 6px !important;min-width:0 !important;text-align:center}
+  .stat b{font-size:1.05rem !important}
+  .stat span{font-size:12px !important;line-height:1.25 !important}
+  .hero-block,.train-hero,.v14-hero,.career-hero,.sd10-hero,.arch-hero{padding:18px !important}
+  .train-stats,.train-grid,.career-grid2,.career-metric,.deep-sd-grid,.v14-grid,.grid2,.grid3,.glossary-grid,.sd10-two,.sd10-three,.sd10-options,.sd10-qa,.why-box,.interview-box,.communication-grid{
+    grid-template-columns:1fr !important;
+  }
+  .page-shell,.career-wrap,.v14-deep,.sd10-shell,.arch-wrap{width:100% !important;padding-left:0 !important;padding-right:0 !important}
+  #flashcardsHub .content{padding:4px 14px 18px !important}
+  #flashcardsHub .card,#flashcardsHub .face{border-radius:18px !important}
+  .hint-keys{display:none}
+  .answer-browser-item .ab-actions button,.answer-browser-quick button{min-height:44px !important;font-size:14px !important}
+  .modal{align-items:flex-end;padding:0}
+  .modalbox{width:100%;max-height:min(92dvh,100%);border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+  .formgrid{grid-template-columns:1fr !important}
+}
+@media (min-width:761px){
+  .hint-swipe{display:none}
+  .lead-more>summary{display:none}
+  .lead-more>.lead{display:block !important}
+}
+#mount .question,#mount,#controls,.train-answer,h1,h2{scroll-margin-top:76px}
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{
+  outline:3px solid var(--focus) !important;
+  outline-offset:2px !important;
+}
+@media (hover:none){
+  .toolbtn:hover,.statebtn:hover,#hubnav button:hover,.card:hover{transform:none !important;filter:none !important}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+  #flashcardsHub .face{animation:none !important}
+}
+.empty{padding:36px 16px !important}
+.empty h3{font-size:1.3rem;color:#f4f7ff;margin:0 0 8px}
+.empty p{font-size:1rem !important;line-height:1.6 !important;color:var(--muted)}
+.category-picker-option{min-height:40px}
+@media (max-width:700px){
+  #flashcardsHub .category-picker-option{min-height:44px !important;font-size:15px !important}
+  #flashcardsHub .category-picker-actions button{min-height:44px;font-size:15px !important}
+}
+#flashcardsHub .example,
+#flashcardsHub pre.example,
+#flashcardsHub .example code,
+#flashcardsHub pre.example code,
+#flashcardsHub .code-block,
+#flashcardsHub .code-block code,
+.cheat-code,
+.cheat-code code,
+.sd10-code,
+.career-code{
+  white-space:pre-wrap !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  font-size:14px !important;
+  line-height:1.55 !important;
+}
+
+</style>
 </head>
 <body>
+<a class="skip-link" href="#mount">Przejdź do fiszki</a>
 <div class="app">
 <header class="top">
-<div><div class="eyebrow">MASTER INTERVIEW PLATFORM · 2026 · LEARNING LAB</div><div class="title">Senior Frontend<br><span style="color:#6bd9ff">/ Fullstack</span> Learning Lab</div><div class="lead">Przygotowanie do rozmów Senior Frontend i frontend-heavy Fullstack: JavaScript, TypeScript, React, Next.js, Node.js, CSS, Web APIs, HTTP, security, testing, bazy danych i system design. Najpierw odpowiedz z pamięci, potem porównaj ze wzorcem i oceń trudność. Platforma planuje kolejne powtórki, a postęp zapisuje lokalnie.</div></div>
+<div><div class="eyebrow">Nauka do rozmów · 2026</div><h1 class="title">Senior Frontend<br><span style="color:#6bd9ff">/ Fullstack</span> Learning Lab</h1><details class="lead-more"><summary>O tej platformie</summary><p class="lead">Przygotowanie do rozmów Senior Frontend i frontend-heavy Fullstack: JavaScript, TypeScript, React, Next.js, Node.js, CSS, Web APIs, HTTP, security, testing, bazy danych i system design. Najpierw odpowiedz z pamięci, potem porównaj ze wzorcem i oceń trudność. Platforma planuje kolejne powtórki, a postęp zapisuje lokalnie.</p></details></div>
 <div class="stats"><div class="stat"><b id="total">1719</b><span>fiszki</span></div><div class="stat"><b id="known">0</b><span>znane</span></div><div class="stat"><b id="unknown">0</b><span>nieznane</span></div><div class="stat"><b id="review">0</b><span>do powtórzenia</span></div></div>
 </header>
-<nav class="hubnav" id="hubnav"><button class="active" data-hub="flashcards">Fiszki</button><button data-hub="resources">Research Hub · 60 stron</button><button data-hub="cases">System Design · 20 cases</button><button data-hub="cheats">Cheat Sheets · 20 tematów</button><button type="button" class="extra-tab" data-extra="api">REST & API Design</button><button type="button" class="extra-tab" data-extra="interview">Interview Playbook</button><button type="button" class="extra-tab" data-extra="glossary">Skróty & Mnemoniki</button><button type="button" class="extra-tab" data-extra="architecture">Architecture Lab · System Design MASTERCLASS</button><button type="button" class="extra-tab" data-extra="audit">Audyt V8 · Jak się uczyć</button><button type="button" class="extra-tab" data-extra="messaging">Kafka · RabbitMQ · Redis MASTERCLASS</button><button type="button" class="extra-tab" data-extra="practice">Gamified Dev Lab · 40+</button><button type="button" class="extra-tab" data-extra="career">Career Cases · 3 deep dives</button><button type="button" class="extra-tab" data-extra="training">Interview Training · Daily + Review</button></nav>
+<nav aria-label="Główne sekcje nauki" class="hubnav" id="hubnav"><button class="active" data-hub="flashcards">Fiszki</button><button aria-label="Research Hub · 60 stron" title="Research Hub · 60 stron" data-hub="resources">Research</button><button aria-label="System Design · 20 cases" title="System Design · 20 cases" data-hub="cases">System Design</button><button aria-label="Cheat Sheets · 20 tematów" title="Cheat Sheets · 20 tematów" data-hub="cheats">Ściągi</button><button aria-label="REST & API Design" title="REST & API Design" type="button" class="extra-tab" data-extra="api">API</button><button aria-label="Interview Playbook" title="Interview Playbook" type="button" class="extra-tab" data-extra="interview">Playbook</button><button aria-label="Skróty & Mnemoniki" title="Skróty & Mnemoniki" type="button" class="extra-tab" data-extra="glossary">Skróty</button><button aria-label="Architecture Lab · System Design MASTERCLASS" title="Architecture Lab · System Design MASTERCLASS" type="button" class="extra-tab" data-extra="architecture">Architektura</button><button aria-label="Audyt V8 · Jak się uczyć" title="Audyt V8 · Jak się uczyć" type="button" class="extra-tab" data-extra="audit">Jak się uczyć</button><button aria-label="Kafka · RabbitMQ · Redis MASTERCLASS" title="Kafka · RabbitMQ · Redis MASTERCLASS" type="button" class="extra-tab" data-extra="messaging">Messaging</button><button aria-label="Gamified Dev Lab · 40+" title="Gamified Dev Lab · 40+" type="button" class="extra-tab" data-extra="practice">Dev Lab</button><button aria-label="Career Cases · 3 deep dives" title="Career Cases · 3 deep dives" type="button" class="extra-tab" data-extra="career">Kariera</button><button aria-label="Interview Training · Daily + Review" title="Interview Training · Daily + Review" type="button" class="extra-tab" data-extra="training">Trening</button></nav>
 <section id="messagingHub" class="hub extraHub"><div class="v14-deep"><div class="v14-hero"><div class="eyebrow">DISTRIBUTED SYSTEMS · MESSAGING · CACHING</div><h1>Kafka · RabbitMQ · Redis<br><span style="color:#5de0d1">MASTERCLASS</span></h1><p><b>Najpierw problem, potem technologia.</b> Message broker rozdziela producenta i konsumenta w czasie, tempie oraz awariach. Kafka, RabbitMQ i Redis mają częściowo wspólny obszar, ale inne modele danych i gwarancje.</p><div class="v14-flow"><span class="v14-node">Producer</span><span class="v14-arrow">→</span><span class="v14-node">Broker / Stream</span><span class="v14-arrow">→</span><span class="v14-node">Consumer</span><span class="v14-arrow">→</span><span class="v14-node">Side effect</span></div><div class="v14-tip"><b>Najważniejsze:</b> zanim powiesz „Kafka”, „RabbitMQ” albo „Redis”, określ: request-response, kolejka pracy, event stream, fan-out, replay, backpressure czy cache.</div></div><div class="v14-grid"><div class="v14-panel"><h2>Po co message broker?</h2><p>Bez brokera często masz <b>A → HTTP → B</b>. A zna B, B musi działać teraz, a timeout B wpływa na A.</p><p>Broker dodaje <b>bufor</b>. A może powiedzieć „mam pracę”, a B odbierze ją później. To daje niezależne skalowanie, absorbowanie skoków ruchu i retry.</p><p><b>Cena:</b> kolejny system, opóźnienie, monitoring, retry, duplikaty, ordering, DLQ i trudniejsze debugowanie.</p><div class="v14-junior"><b>Dla juniora:</b> jak kolejka w urzędzie. Nie musisz czekać przy konkretnym biurku.</div></div><div class="v14-panel"><h2>Kafka</h2><p><b>Topic → partitions → offsets → consumer groups.</b> Rekord pozostaje dostępny zgodnie z retencją. Consumer pamięta pozycję, więc można robić <b>replay</b>.</p><p>Partycje dają równoległość, ale ordering jest tylko w obrębie partycji. Zły key może stworzyć hot partition.</p><div class="v14-junior"><b>Dla juniora:</b> Kafka jest jak dziennik. Czytelnik pamięta stronę i może wrócić do historii.</div></div><div class="v14-panel"><h2>RabbitMQ</h2><p><b>Publisher → exchange → binding → queue → consumer.</b> Exchange routuje, queue przechowuje pracę.</p><p>Najważniejsze mechanizmy to <b>ACK/NACK, requeue, prefetch i publisher confirms</b>. To naturalne narzędzie do work queues i routingu.</p><div class="v14-junior"><b>Dla juniora:</b> sortownia paczek: exchange sortuje, queue jest półką, worker odbiera.</div></div><div class="v14-panel"><h2>Redis</h2><p>Redis jest serwerem struktur danych: <b>String, Hash, List, Set, Sorted Set, Streams, JSON</b> i inne typy.</p><p>Może robić cache, counters, rate limiting, leaderboard, krótkotrwały stan, Pub/Sub i Streams. Najpierw wybierz strukturę pod operacje.</p><div class="v14-junior"><b>Dla juniora:</b> pudełko z wieloma przegródkami. Każda służy do innego rodzaju problemu.</div></div></div><div class="v14-panel" style="margin-top:18px"><h2>Porównanie</h2><table class="v14-table"><tr><th>Problem</th><th>Kafka</th><th>RabbitMQ</th><th>Redis</th></tr><tr><td>Work queue</td><td>Możliwe</td><td><b>Naturalny fit</b></td><td>Lists/Streams</td></tr><tr><td>Event history / replay</td><td><b>Główny model</b></td><td>Nie dla klasycznych queues</td><td>Streams</td></tr><tr><td>Routing</td><td>topic/key/partition</td><td><b>exchange/bindings</b></td><td>Semantyka aplikacji</td></tr><tr><td>Cache</td><td>Nie</td><td>Nie</td><td><b>Naturalny fit</b></td></tr><tr><td>Rate limiting</td><td>Overkill</td><td>Nie jest naturalny</td><td><b>Bardzo dobry fit</b></td></tr><tr><td>Ordering</td><td>W partycji</td><td>Zależny od topologii</td><td>Zależny od struktury</td></tr><tr><td>Główne ryzyko</td><td>partitions/lag/retention</td><td>queues/ack/retry</td><td>memory/eviction/hot keys</td></tr></table></div><div class="v14-grid"><div class="v14-panel"><h2>Failure modes</h2><ul><li><b>Duplicate:</b> side effect wykonany, crash przed ACK/commit.</li><li><b>Poison message:</b> retry limit + DLQ.</li><li><b>Backlog:</b> producer szybszy niż consumer.</li><li><b>Hot key/partition:</b> ruch koncentruje się w jednym miejscu.</li><li><b>Retry storm:</b> wszyscy retryują równocześnie.</li><li><b>Cache stampede:</b> wygasły klucz powoduje lawinę do originu.</li></ul></div><div class="v14-panel"><h2>System Design: kolejność myślenia</h2><ol><li><b>Requirements:</b> co i kiedy musi się wydarzyć?</li><li><b>Scale:</b> RPS, payload, backlog, użytkownicy.</li><li><b>Semantics:</b> at-most-once, at-least-once, ordering, replay.</li><li><b>Source of truth:</b> DB, broker, cache?</li><li><b>Failure:</b> timeout, crash, duplicate, overload.</li><li><b>Observability:</b> lag, queue depth, latency, error rate, DLQ.</li><li><b>Rollout:</b> migration, feature flag, canary, rollback.</li></ol></div></div></div></section><section id="practiceHub" class="hub extraHub"><div class="v14-deep"><div class="v14-hero"><div class="eyebrow">GAMIFIED DEV LEARNING · RESEARCHED · FREE-FIRST</div><h1>Gamified Dev Lab<br><span style="color:#5de0d1">40+ gier &amp; challenge’y</span></h1><p>Zamiast własnych gierek bez związku z nauką: prawdziwe, darmowe lub częściowo darmowe narzędzia, w których uczysz się przez rozwiązywanie poziomów, pisanie kodu, komendy albo interaktywne zagadki. Priorytet: Twój stack — CSS, Git, JavaScript, TypeScript, React, Next.js, SQL/PostgreSQL, Docker i narzędzia frontendowe.</p><div class="v14-tip"><b>Najkrótsza ścieżka pod senior frontend:</b> Flexbox Froggy → Grid Garden → CSS Diner → Learn Git Branching → Elevator Saga → Untrusted → TypeScript Exercises → React Interactive → Next.js Learn → PostgreSQL Exercises → Docker Dojo.</div></div><div class="v14-games"><article class="v14-game"><div class="num">01 · CSS • Flexbox</div><h3>Flexbox Froggy</h3><p>24 poziomy. Ustawiasz żaby na liliowcach, pisząc prawdziwy CSS Flexbox.</p><a href="https://flexboxfroggy.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">02 · CSS • Grid</div><h3>Grid Garden</h3><p>28 poziomów CSS Grid: kolumny, wiersze, placement, areas i układ siatki.</p><a href="https://cssgridgarden.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">03 · CSS • Selectors</div><h3>CSS Diner</h3><p>Zagadki z selektorami CSS, combinatorami i coraz trudniejszymi selektorami.</p><a href="https://flukeout.github.io/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">04 · CSS • Flexbox</div><h3>Flexbox Defense</h3><p>Tower defense, w którym rozmieszczasz wieże za pomocą właściwości Flexbox.</p><a href="http://www.flexboxdefense.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">05 · CSS • Code Golf</div><h3>CSSBattle</h3><p>Odtwarzanie targetów za pomocą HTML/CSS. Wynik zależy m.in. od podobieństwa i długości kodu.</p><a href="https://cssbattle.dev/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">06 · CSS • Microgames</div><h3>Tailwind Trainer</h3><p>Gra w praktykowanie utility classes Tailwind CSS. Obecnie oznaczona jako Free Beta.</p><a href="https://codepip.com/games/tailwind-trainer/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">07 · CSS • Anchor Positioning</div><h3>Anchoreum</h3><p>Gra do nauki CSS Anchor Positioning, pozycjonowania i rozmiarowania elementów.</p><a href="https://codepip.com/games/anchoreum/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">08 · CSS • Selectors</div><h3>Codepip Games</h3><p>Katalog gier CSS/HTML/JS/SQL z filtrem Free. Przydatny jako hub do kolejnych mini-gier.</p><a href="https://codepip.com/games/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">09 · Regex • Logic</div><h3>Regex Crossword</h3><p>Krzyżówki, w których reguły pól są wyrażeniami regularnymi. Uczysz się regex przez dedukcję.</p><a href="https://regexcrossword.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">10 · Git • Branching</div><h3>Learn Git Branching</h3><p>Wizualny symulator repozytorium z poziomami dla commitów, branchy, cherry-pick, rebase i remote.</p><a href="https://learngitbranching.js.org/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">11 · Git • Internals</div><h3>Oh My Git!</h3><p>Open-source gra wizualizująca działanie Gita i jego model obiektów. Do pobrania, bez opłat.</p><a href="https://ohmygit.org/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">12 · Git • Collaboration</div><h3>GitHub Skills</h3><p>Interaktywne kursy prowadzone bezpośrednio w repozytorium GitHub, z automatycznym feedbackiem.</p><a href="https://skills.github.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">13 · JavaScript • Simulation</div><h3>Elevator Saga</h3><p>Programujesz zachowanie wind w JavaScript i przechodzisz coraz trudniejsze scenariusze wydajnościowe.</p><a href="https://play.elevatorsaga.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">14 · JavaScript • Code Adventure</div><h3>Untrusted</h3><p>Przygodówka, w której rozwiązujesz kolejne poziomy poprzez modyfikowanie i wykonywanie JavaScriptu.</p><a href="https://untrustedgame.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">15 · JavaScript • Algorithms</div><h3>CodeCombat</h3><p>Gra RPG, w której sterujesz postacią kodem. JavaScript i Python są obsługiwane; pierwsze 5 poziomów Kithgard Dungeon jest darmowe.</p><a href="https://codecombat.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">16 · Service Workers • PWA</div><h3>Service Workies</h3><p>Fabularna gra o Service Workers, offline support, caching, performance i background sync.</p><a href="https://serviceworkies.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">17 · SQL • Detective</div><h3>SQLMurder</h3><p>Detektywistyczna gra SQL uruchamiana w przeglądarce. Darmowe rozdziały 1–3 obejmują m.in. SELECT, WHERE, ORDER BY, LIMIT, LIKE i INNER JOIN.</p><a href="https://sqlmurder.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">18 · SQL • Mystery</div><h3>SQL Murder Mystery</h3><p>Klasyczny self-directed SQL mystery: rozwiązujesz sprawę, odpytując bazę danych.</p><a href="https://mystery.knightlabprojects.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">19 · SQL • PvP / Missions</div><h3>SQL Protocol</h3><p>Darmowa gra SQL w przeglądarce z misjami, story i trybem rywalizacji. Można zacząć bez logowania.</p><a href="https://sqlprotocol.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">20 · SQL • Practice</div><h3>SQLZoo</h3><p>Interaktywne ćwiczenia SQL z natychmiastowym sprawdzaniem zapytań. Mniej „gra”, więcej hands-on.</p><a href="https://sqlzoo.net/wiki/SQL_Tutorial" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">21 · PostgreSQL • SQL</div><h3>PostgreSQL Exercises</h3><p>Praktyczne zadania PostgreSQL od SELECT/WHERE do JOIN, aggregate, window functions i recursive queries.</p><a href="https://pgexercises.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">22 · Docker • Containers</div><h3>Docker Dojo</h3><p>Zero-install symulowany Docker Engine: 21 lekcji, 80 walidowanych kroków, Compose, sieci i sandbox.</p><a href="https://shaqa3.github.io/docker-dojo/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">23 · Docker • Hands-on</div><h3>Play with Docker</h3><p>Przeglądarkowe środowisko do praktycznych eksperymentów z Dockerem.</p><a href="https://labs.play-with-docker.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">24 · Vim • Editor</div><h3>Vim Adventures</h3><p>„Zelda meets text editor”: uczysz się komend, motions i operatorów przez grę. Pełna wersja jest płatna, dostępny jest tryb dla niezalogowanych użytkowników z odblokowanymi poziomami.</p><a href="https://vim-adventures.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">25 · TypeScript • Types</div><h3>TypeScript Exercises</h3><p>Ćwiczenia skoncentrowane na type systemie: typy, generics, assertions i modelowanie.</p><a href="https://typescript-exercises.github.io/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">26 · TypeScript • Interactive</div><h3>Learn TypeScript Online</h3><p>Darmowy interaktywny kurs z playgroundem, 25 lekcjami i praktyką typów, narrowing, generics oraz API.</p><a href="https://learningtypescript.org/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">27 · React • Interactive</div><h3>Interactive React</h3><p>Ćwiczenia React z edytorem, live preview, automatyczną walidacją, hintami i gamifikowanym postępem.</p><a href="https://www.interactive-react.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">28 · React • Exercises</div><h3>React Tutorial Exercises</h3><p>Open-source zestaw autosprawdzanych ćwiczeń React, od podstaw po bardziej praktyczne problemy.</p><a href="https://github.com/4GeeksAcademy/react-tutorial-exercises" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">29 · React • Official</div><h3>React Tic-Tac-Toe</h3><p>Oficjalny tutorial React oparty na zbudowaniu gry, z komponentami, props, state i time travel.</p><a href="https://react.dev/learn/tutorial-tic-tac-toe" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">30 · Next.js • Fullstack</div><h3>Next.js Learn</h3><p>Oficjalny hands-on kurs Next.js z App Router, data fetching, mutacjami, auth i kolejnymi zadaniami.</p><a href="https://nextjs.org/learn" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">31 · Frontend • Projects</div><h3>Frontend Mentor</h3><p>Realistyczne zadania projektowe z HTML/CSS/JS i API. Nie jest grą, ale działa jak progresywny challenge ladder.</p><a href="https://www.frontendmentor.io/challenges" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">32 · Networking • Systems</div><h3>Networking Labs</h3><p>Interaktywne laboratoria sieciowe, topologie i śledzenie przepływu pakietów.</p><a href="https://natted.cloud/labs" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">33 · Regex • Practice</div><h3>RegexOne</h3><p>Krótkie interaktywne lekcje regex z zadaniami. Dobre jako przygotowanie przed Regex Crossword.</p><a href="https://regexone.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">34 · JS • Practice</div><h3>Exercism JavaScript</h3><p>Ćwiczenia programistyczne JavaScript z automatycznym feedbackiem i opcjonalnym mentoringiem.</p><a href="https://exercism.org/tracks/javascript" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">35 · HTML/CSS/JS • Gamified</div><h3>Coddy Full Stack Roadmap</h3><p>Interaktywna ścieżka HTML → CSS → JS → TypeScript → React → Next.js → SQL → Linux → Git → Docker, z challenge’ami i quizami.</p><a href="https://coddy.tech/landing/full-stack" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">36 · TypeScript • Practice</div><h3>Coddy TypeScript</h3><p>73 lekcje, 58 challenge’y i setki pytań, wykonywane interaktywnie w przeglądarce.</p><a href="https://coddy.tech/landing/typescript" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">37 · React • Practice</div><h3>Coddy React</h3><p>Interaktywny React: JSX, props, state, events, a dalej Next.js; 69 challenge’y.</p><a href="https://coddy.tech/landing/react" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">38 · CSS • Gamified Course</div><h3>CSSBattle Learn</h3><p>Gamifikowany kurs CSS z poziomami; darmowy jest rozdział demonstracyjny, pełne ścieżki są płatne.</p><a href="https://cssbattle.dev/learn" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">39 · CSS • Typography</div><h3>Kerntype</h3><p>Gra ucząca kerningu przez dopasowywanie odstępów między znakami. Przydatna dla frontend/UI, mimo że nie jest stricte kodowaniem.</p><a href="https://type.method.ac/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article><article class="v14-game"><div class="num">40 · Git • Real workflow</div><h3>GitHub Skills</h3><p>Ćwiczenia osadzone w prawdziwym modelu repozytorium: issues, pull requests, Actions i workflow zespołowy.</p><a href="https://skills.github.com/" target="_blank" rel="noopener noreferrer">Otwórz ↗</a></article></div><div class="v14-panel" style="margin-top:18px"><h2>Jak czytać oznaczenia</h2><p><b>FREE · gra</b> = pełna gra dostępna bez płatności. <b>FREE · lab</b> = darmowa interaktywna praktyka, ale mniej „growa”. <b>FREE + PAID</b> = istnieje sensowna darmowa część, lecz pełna zawartość jest płatna. Nie mieszam tych kategorii, bo „darmowy” w marketingu potrafi znaczyć „kliknij trzy razy i wyciągnij kartę”.</p><p><b>Priorytet dla Twojego stacku:</b> CSS/Flexbox/Grid → Git → JS → TS → React/Next → SQL/Postgres → Docker → networking. Gry stricte pod TanStack Query, NX, MobX, gRPC czy WebSockets są dużo rzadsze; zamiast wciskać słabe pseudo-gry, dodałem najbliższe kompetencyjnie symulatory i laby.</p></div></div></section><section id="apiHub" class="hub extraHub"><div class="page-shell">
   <div class="hero-block"><span class="eyebrow">ARCHITECTURE · HTTP · REST</span><h2>REST i projektowanie API od wymagań do kontraktu</h2><p>Najpierw problem biznesowy, potem semantyka HTTP, kontrakt, błędy, bezpieczeństwo, skalowanie i dopiero implementacja. API jest produktem dla innych programów.</p></div>
   <div class="diagram-card"><div class="diagram-title">Mental model projektowania API</div><svg viewBox="0 0 900 190" role="img" aria-label="requirements to API diagram"><defs><marker id="arrowApi" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 z" fill="#67a5ff"/></marker></defs><g class="svg-node"><rect x="20" y="55" width="150" height="70" rx="14"/><text x="95" y="82" text-anchor="middle">Wymagania</text><text x="95" y="103" text-anchor="middle">user + constraints</text><rect x="210" y="55" width="150" height="70" rx="14"/><text x="285" y="82" text-anchor="middle">Model domeny</text><text x="285" y="103" text-anchor="middle">resources + actions</text><rect x="400" y="55" width="150" height="70" rx="14"/><text x="475" y="82" text-anchor="middle">Kontrakt HTTP</text><text x="475" y="103" text-anchor="middle">method + status</text><rect x="590" y="55" width="130" height="70" rx="14"/><text x="655" y="82" text-anchor="middle">Failure modes</text><text x="655" y="103" text-anchor="middle">retry + auth</text><rect x="760" y="55" width="120" height="70" rx="14"/><text x="820" y="82" text-anchor="middle">Observability</text><text x="820" y="103" text-anchor="middle">SLO + logs</text><path d="M170 90h40M360 90h40M550 90h40M720 90h40" stroke="#67a5ff" stroke-width="3" marker-end="url(#arrowApi)"/></g></svg></div>
@@ -1696,20 +2011,20 @@ Content-Type: application/json
   <div class="prose-card"><h3>Na co uważać podczas rozmowy</h3><ul class="checklist"><li>Nie myl authentication z authorization.</li><li>Nie myl idempotencji z „brakiem efektów ubocznych”.</li><li>Nie zakładaj, że POST zawsze musi tworzyć rekord.</li><li>Nie używaj 200 do każdego błędu biznesowego.</li><li>Nie projektuj API bez paginacji, jeśli kolekcja może rosnąć.</li><li>Nie obiecuj performance bez wskazania metryki i workloadu.</li></ul></div>
 </div></section>
 <div id="flashcardsHub" class="hub active">
-<section class="toolbar">
+<section class="toolbar"><div class="mobile-study-bar" id="mobileStudyBar"><button type="button" class="toolbtn" id="openFilters" aria-expanded="true" aria-controls="filterDrawerBody">Filtry</button></div><details class="filter-drawer" id="filterDrawer" open><summary class="filter-drawer-summary">Filtry i sesja</summary><div class="filter-drawer-body" id="filterDrawerBody">
 <div class="filter-help"><strong>Znajdź fiszki</strong><span>Wpisz temat lub ustaw filtry. Sesja użyje tylko pasujących fiszek.</span></div>
 <div class="tools">
 <label class="filter-field search-field"><span>Szukaj fiszek</span><input id="search" class="field search" placeholder="Np. React render, cache, TypeScript…" autocomplete="off" aria-label="Szukaj fiszek" title="Wpisz jeden lub kilka terminów. Wszystkie muszą wystąpić w treści fiszki."></label>
 <div class="filter-field category-picker-field"><span id="categoryLabel">Kategoria</span><div class="category-picker" id="categoryPicker"><button type="button" class="select category-picker-trigger" id="categoryPickerTrigger" aria-expanded="false" aria-controls="categoryPickerPanel">Wszystkie kategorie <span aria-hidden="true">⌄</span></button><div class="category-picker-panel" id="categoryPickerPanel" hidden><input id="categoryPickerSearch" class="field category-picker-search" type="search" placeholder="Szukaj kategorii…" aria-label="Szukaj kategorii"><div class="category-picker-actions"><button type="button" id="categorySelectAll">Zaznacz wszystkie</button><button type="button" id="categoryClearAll">Wyczyść</button></div><div id="categoryPickerOptions" class="category-picker-options"></div><div class="category-picker-footer"><span id="categoryPickerCount">Wszystkie kategorie</span><button type="button" class="toolbtn primary" id="categoryPickerDone">Gotowe</button></div></div></div><select id="category" class="select category-multi category-state" multiple size="1" aria-label="Kategorie aktywnego filtra" tabindex="-1"><option value="all">Wszystkie kategorie</option></select></div>
 <label class="filter-field"><span>Status nauki</span><select id="status" class="select" aria-label="Filtruj według statusu" title="Pokaż fiszki według statusu nauki"><option value="all">Wszystkie statusy</option><option value="review">Do powtórzenia</option><option value="known">Znane</option><option value="unknown">Nieznane</option></select></label>
 <label class="filter-field"><span>Źródło</span><select id="source" class="select" aria-label="Filtruj według źródła" title="Pokaż fiszki z wybranego źródła"><option value="all">Wszystkie źródła</option></select></label>
-<button class="toolbtn" id="random" type="button" title="Przejdź do losowej fiszki z aktualnych wyników">Losuj kartę</button><div class="session-launch"><label for="sessionSize">Liczba kart</label><select id="sessionSize" class="select" aria-label="Liczba kart w sesji"><option value="5">5 kart</option><option value="10" selected>10 kart</option><option value="20">20 kart</option><option value="50">50 kart</option><option value="all">Wszystkie pasujące</option></select><button class="toolbtn primary" id="studyQueue" type="button" title="Rozpocznij sesję z aktualnych wyników filtrowania">Ucz się z wyników</button></div><button class="toolbtn" id="add" type="button">+ Dodaj fiszkę</button>
+<button class="toolbtn" id="random" type="button" title="Przejdź do losowej fiszki z aktualnych wyników">Losuj kartę</button><div class="session-launch"><label for="sessionSize">Liczba kart</label><select id="sessionSize" class="select" aria-label="Liczba kart w sesji"><option value="5">5 kart</option><option value="10" selected>10 kart</option><option value="20">20 kart</option><option value="50">50 kart</option><option value="all">Wszystkie pasujące</option></select><button class="toolbtn primary" id="studyQueue" type="button" title="Rozpocznij sesję z aktualnych wyników filtrowania"><span class="study-long">Ucz się z wyników</span><span class="study-short">Ucz się</span></button></div><button class="toolbtn" id="add" type="button">+ Dodaj fiszkę</button>
 </div>
 <div class="filter-summary" id="filterSummary" aria-live="polite"><span id="filterCount">Wczytywanie fiszek…</span><div class="active-filter-chips" id="activeFilterChips" aria-label="Aktywne filtry"></div><button class="toolbtn clear-filters" id="clearFilters" type="button" hidden>Wyczyść filtry</button></div>
 <div class="subtools flashcard-bulk-tools" aria-label="Szybkie działania na fiszkach"><span class="chip" id="bulkScope">Działania dotyczą aktualnie pasujących fiszek</span><button class="toolbtn" id="markMatchingKnown" type="button">Oznacz pasujące jako znane</button><button class="toolbtn" id="markMatchingUnknown" type="button">Oznacz pasujące jako nieznane</button><button class="toolbtn" id="markMatchingReview" type="button">Oznacz pasujące jako do nauki</button><button class="toolbtn" id="toggleAnswerBrowser" type="button" aria-expanded="false">Lista pytań i odpowiedzi</button></div><div id="answerBrowser" class="answer-browser" hidden><div class="answer-browser-head"><div><strong>Przegląd fiszek</strong><span id="answerBrowserCount">Wszystkie pasujące fiszki</span></div><label>Na stronie <select id="answerPageSize" class="select"><option value="20">20</option><option value="50" selected>50</option><option value="100">100</option></select></label><button class="toolbtn" id="closeAnswerBrowser" type="button">Zamknij</button></div><div class="answer-browser-quick"><button type="button" id="answerShowPage">Pokaż odpowiedzi na stronie</button><button type="button" id="answerHidePage">Ukryj odpowiedzi na stronie</button></div><div class="answer-browser-summary" id="answerBrowserSummary" aria-live="polite"></div><div id="answerBrowserItems" class="answer-browser-items"></div><div class="answer-browser-pagination"><button class="toolbtn" id="answerPrevPage" type="button">← Poprzednie</button><span id="answerPageLabel"></span><button class="toolbtn" id="answerNextPage" type="button">Następne →</button></div></div>
 <div class="subtools"><button class="toolbtn" id="sources">196 źródeł</button><button class="toolbtn" id="export">Pełny backup JSON</button><button class="toolbtn" id="importBtn">Import JSON</button><input id="importFile" type="file" accept="application/json" hidden><button class="toolbtn" id="reset">Reset stanów</button><span class="chip">←/→ poprzednia lub następna · <kbd>Spacja</kbd> pokaż odpowiedź · po odsłonięciu <kbd>1–4</kbd> oceń odpowiedź</span></div>
-</section>
-<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Odpowiedz z pamięci → pokaż odpowiedź → oceń uczciwie. Strzałki zmieniają fiszkę, spacja odsłania odpowiedź.</div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
+</div></details></section>
+<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress" id="cardProgress" role="progressbar" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" aria-label="Pozycja w zestawie fiszek"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Odpowiedz z pamięci, pokaż wzorzec i oceń szczerze. <span class="hint-swipe">Przesuń kartę w lewo lub w prawo, żeby zmienić fiszkę.</span> <span class="hint-keys">Skróty: strzałki, spacja, po odpowiedzi klawisze 1–4.</span></div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
 </div>
 <div id="auditHub" class="hub"></div><div id="resourcesHub" class="hub"></div><div id="casesHub" class="hub"></div><div id="cheatsHub" class="hub"></div><div id="architectureHub" class="hub"></div><div id="careerHub" class="hub extraHub"></div>
 <div id="modal" class="modal"><div class="modalbox" id="modalbox"></div></div>
@@ -2628,4 +2943,153 @@ function restoreTrainingUiState(){
 <footer style="max-width:1180px;margin:30px auto;padding:0 24px 40px;color:#7186a5;font-size:12px;line-height:1.6">LEARNING LAB V17 · 1739 fiszek · 196 źródeł · 40+ gamified games & labs · osobne zakładki · localStorage · pełny backup/restore JSON · zapis własnych fiszek, statusów, filtrów i sesji · poprawiony layout mobilny.</footer>
 
 
+<script id="ux-behavior-v54">
+(function(){
+  const root = document.documentElement;
+  const mobileQuery = window.matchMedia('(max-width: 800px)');
+  const desktopLeadQuery = window.matchMedia('(min-width: 761px)');
+  const drawer = document.getElementById('filterDrawer');
+  const drawerSummary = drawer ? drawer.querySelector('summary') : null;
+  const openFilters = document.getElementById('openFilters');
+  const bar = document.getElementById('mobileStudyBar');
+  const launch = document.querySelector('#flashcardsHub .session-launch');
+  const tools = document.querySelector('#flashcardsHub .tools');
+  const launchAnchor = launch ? launch.nextElementSibling : null;
+  const lead = document.querySelector('.lead-more');
+  let leadTouched = false;
+  let drawerInitialized = false;
+
+  function filtersLookActive(){
+    const clear = document.getElementById('clearFilters');
+    return !!(clear && !clear.hidden);
+  }
+  function syncFilterButton(){
+    if(!openFilters || !drawer) return;
+    const open = drawer.open;
+    openFilters.setAttribute('aria-expanded', open ? 'true' : 'false');
+    openFilters.textContent = open ? 'Ukryj filtry' : (filtersLookActive() ? 'Filtry · aktywne' : 'Filtry');
+  }
+  function placeSessionLaunch(){
+    if(!launch || !bar || !tools) return;
+    if(mobileQuery.matches){
+      if(launch.parentElement !== bar) bar.appendChild(launch);
+      root.classList.add('ux-mobile');
+      if(drawer && !drawerInitialized){ drawer.open = false; drawerInitialized = true; }
+      if(drawerSummary) drawerSummary.tabIndex = -1;
+    }else{
+      if(launch.parentElement !== tools) tools.insertBefore(launch, launchAnchor);
+      root.classList.remove('ux-mobile');
+      if(drawer) drawer.open = true;
+      if(drawerSummary) drawerSummary.tabIndex = 0;
+    }
+    syncFilterButton();
+  }
+  function syncLead(){
+    if(!lead) return;
+    if(desktopLeadQuery.matches) lead.open = true;
+    else if(!leadTouched) lead.open = false;
+  }
+  if(lead){
+    lead.querySelector('summary')?.addEventListener('click', function(){ leadTouched = true; });
+  }
+  if(openFilters && drawer){
+    openFilters.addEventListener('click', function(){
+      drawer.open = !drawer.open;
+      syncFilterButton();
+      if(drawer.open) drawer.querySelector('#search')?.focus();
+    });
+    drawer.addEventListener('toggle', syncFilterButton);
+  }
+  const summary = document.getElementById('filterSummary');
+  if(summary && 'MutationObserver' in window){
+    new MutationObserver(syncFilterButton).observe(summary, {subtree:true, childList:true, attributes:true, characterData:true});
+  }
+  placeSessionLaunch();
+  syncLead();
+  mobileQuery.addEventListener('change', placeSessionLaunch);
+  desktopLeadQuery.addEventListener('change', syncLead);
+
+  function syncProgress(){
+    const barEl = document.getElementById('cardProgress');
+    const num = document.querySelector('#mount .number');
+    if(!barEl || !num) return;
+    const match = num.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+    if(!match) return;
+    const now = match[1], max = match[2];
+    barEl.setAttribute('aria-valuemin', '1');
+    barEl.setAttribute('aria-valuemax', max);
+    barEl.setAttribute('aria-valuenow', now);
+    barEl.setAttribute('aria-label', 'Fiszka ' + now + ' z ' + max);
+  }
+  const mount = document.getElementById('mount');
+  if(mount && 'MutationObserver' in window){
+    new MutationObserver(syncProgress).observe(mount, {childList:true, subtree:true});
+    syncProgress();
+  }
+
+  document.querySelector('.skip-link')?.addEventListener('click', function(){
+    const hub = document.getElementById('flashcardsHub');
+    if(hub && !hub.classList.contains('active')){
+      document.querySelector('#hubnav button[data-hub="flashcards"]')?.click();
+    }
+  });
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches && Element.prototype.scrollIntoView){
+    const nativeScroll = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = function(arg){
+      if(arg && typeof arg === 'object') arg = Object.assign({}, arg, {behavior:'auto'});
+      else if(arg === 'smooth') arg = 'auto';
+      return nativeScroll.call(this, arg);
+    };
+  }
+
+  if(!mount) return;
+  let startX = 0, startY = 0, tracking = false, lastNavAt = 0;
+  const interactive = 'textarea, input, select, button, a, summary, pre, .example, .code-block, .cheat-code, .category-picker-panel, .answer-browser';
+  function beginGesture(target, x, y){
+    if(target && target.closest && target.closest(interactive)) return false;
+    tracking = true;
+    startX = x;
+    startY = y;
+    return true;
+  }
+  function finishGesture(x, y){
+    if(!tracking) return;
+    tracking = false;
+    const dx = x - startX;
+    const dy = y - startY;
+    if(Math.abs(dx) < 64 || Math.abs(dx) < Math.abs(dy) * 1.35) return;
+    if(Date.now() - lastNavAt < 450) return;
+    const selection = window.getSelection && window.getSelection();
+    if(selection && String(selection).trim()) return;
+    const button = document.getElementById(dx < 0 ? 'next' : 'prev');
+    if(!button || button.disabled) return;
+    lastNavAt = Date.now();
+    button.click();
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    mount.scrollIntoView({block:'start', behavior:behavior});
+  }
+  mount.addEventListener('pointerdown', function(event){
+    if(event.pointerType === 'mouse') return;
+    beginGesture(event.target, event.clientX, event.clientY);
+  });
+  mount.addEventListener('pointerup', function(event){
+    if(event.pointerType === 'mouse') return;
+    finishGesture(event.clientX, event.clientY);
+  });
+  mount.addEventListener('pointercancel', function(){ tracking = false; });
+  mount.addEventListener('touchstart', function(event){
+    const touch = event.changedTouches && event.changedTouches[0];
+    if(!touch) return;
+    beginGesture(event.target, touch.clientX, touch.clientY);
+  }, {passive:true});
+  mount.addEventListener('touchend', function(event){
+    const touch = event.changedTouches && event.changedTouches[0];
+    if(!touch) return;
+    finishGesture(touch.clientX, touch.clientY);
+  }, {passive:true});
+  mount.addEventListener('touchcancel', function(){ tracking = false; });
+})();
+
+</script>
 </body></html>
