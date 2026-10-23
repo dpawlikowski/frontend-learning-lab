@@ -14,6 +14,14 @@
       .trim();
   }
 
+  // Card categories are very granular ("JS BUG • REGEXP", "CASE STUDY / Database"), so the
+  // filter groups them by their leading topic to keep the picker short and the counts meaningful.
+  function categoryTopic(category) {
+    const raw = String(category ?? '').replace(/^\s*\d+\s*•\s*/, '').trim();
+    const head = raw.split(/\s*[•/—–]\s*|\s+-\s+|:\s+/)[0].trim();
+    return (head || raw || 'Inne').toLocaleUpperCase('pl-PL');
+  }
+
   function filterCards(cards, options) {
     const opts = options || {};
     const categories = Array.isArray(opts.categories) ? opts.categories.filter(v => v && v !== 'all') : [];
@@ -23,7 +31,7 @@
     const q = normalizeSearchText(opts.search || '');
     const tokens = q.split(/\s+/).filter(Boolean);
     return (cards || []).filter(function (card) {
-      if (categories.length && !categories.includes(card.category)) return false;
+      if (categories.length && !categories.includes(card.category) && !categories.includes(categoryTopic(card.category))) return false;
       if (status !== 'all' && card.status !== status) return false;
       if (source !== 'all' && card.source_id !== source) return false;
       if (!q) return true;
@@ -38,6 +46,41 @@
       const normalized = normalizeSearchText(searchable);
       return tokens.every(function (token) { return normalized.includes(token); });
     });
+  }
+
+  // SM-2-inspired heuristic shared by grading and the interval preview on the grade buttons.
+  // It is intentionally simple and not a claim of a validated SM-2 implementation.
+  function scheduleReview(previous, grade, confidence, now) {
+    const prev = previous || {};
+    let reps = Number(prev.reps) || 0;
+    let lapses = Number(prev.lapses) || 0;
+    let ease = Math.max(1.3, Number(prev.ease) || 2.5);
+    const quality = { again: 1, partial: 2, good: 4, easy: 5 }[grade] ?? 2;
+    ease = Math.max(1.3, ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+    let intervalDays;
+    if (grade === 'again') { intervalDays = 0; reps = 0; lapses++; }
+    else if (grade === 'partial') { intervalDays = 0.5; }
+    else if (grade === 'good') { intervalDays = reps === 0 ? 1 : reps === 1 ? 3 : Math.max(3, (Number(prev.interval) || 3) * ease); reps++; }
+    else { intervalDays = reps === 0 ? 2 : reps === 1 ? 5 : Math.max(5, (Number(prev.interval) || 5) * (ease + 0.3)); reps++; }
+    // High confidence + weak recall is a stronger warning than either signal alone.
+    let calibration = 'neutral';
+    if (confidence === 3 && (grade === 'again' || grade === 'partial')) { calibration = 'overconfident'; intervalDays = grade === 'again' ? 0 : Math.min(intervalDays, 0.25); }
+    else if (confidence === 1 && (grade === 'good' || grade === 'easy')) { calibration = 'underconfident'; intervalDays = Math.min(intervalDays, grade === 'easy' ? 3 : 2); }
+    else if (confidence === 2 && (grade === 'again' || grade === 'partial')) { calibration = 'uncertain'; intervalDays = Math.min(intervalDays, grade === 'again' ? 0 : 0.5); }
+    const moment = Number(now) || 0;
+    const due = grade === 'again' ? moment + 10 * 60 * 1000 : moment + Math.max(0.25, intervalDays) * 86400000;
+    return { reps: reps, interval: intervalDays, ease: ease, lapses: lapses, due: due, calibration: calibration };
+  }
+
+  function formatInterval(ms) {
+    const minutes = Math.max(1, Math.round((Number(ms) || 0) / 60000));
+    if (minutes < 60) return minutes + ' min';
+    const hours = Math.round(minutes / 60);
+    if (hours < 24) return hours + ' h';
+    const days = Math.round(hours / 24);
+    if (days < 14) return days + ' d';
+    if (days < 60) return Math.round(days / 7) + ' tyg.';
+    return Math.round(days / 30) + ' mies.';
   }
 
   function normalizeSessionSize(value) {
@@ -94,6 +137,9 @@
   return {
     SESSION_SIZES: SESSION_SIZES,
     normalizeSearchText: normalizeSearchText,
+    categoryTopic: categoryTopic,
+    scheduleReview: scheduleReview,
+    formatInterval: formatInterval,
     filterCards: filterCards,
     normalizeSessionSize: normalizeSessionSize,
     effectiveSessionCount: effectiveSessionCount,

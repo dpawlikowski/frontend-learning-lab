@@ -2537,6 +2537,138 @@ body.focus-study #flashcardsHub:-webkit-full-screen{
   #flashcardsHub .size-pick{padding:6px 8px;font-size:13px}
 }
 </style>
+<style id="study-flow-v55">
+/* V55: one solid, always-reachable study action bar. Earlier layers forced #controls to a
+   transparent, z-index:auto static block, and a transform on the focus container re-anchored
+   position:fixed to the scrolling hub, so on phones the grade buttons floated over the answer. */
+body.focus-study #flashcardsHub:not(:fullscreen):not(:-webkit-full-screen){transform:none !important}
+body.focus-study #flashcardsHub #controls{
+  background:var(--panel,#0c172a) !important;
+  border-top:1px solid var(--line) !important;
+  box-shadow:0 -12px 32px rgba(0,0,0,.35) !important;
+  z-index:90 !important;
+  backdrop-filter:none !important;
+}
+@media (max-width:800px){
+  body.is-studying #flashcardsHub #controls{
+    background:var(--panel,#0c172a) !important;
+    border-top:1px solid var(--line) !important;
+    box-shadow:0 -12px 32px rgba(0,0,0,.35) !important;
+    z-index:90 !important;
+    backdrop-filter:none !important;
+  }
+}
+@media (min-width:801px){
+  body.focus-study #flashcardsHub .layout{display:block !important}
+  body.focus-study #flashcardsHub .stage{max-width:820px !important;margin-inline:auto !important}
+  body.focus-study #flashcardsHub #controls{left:50% !important;right:auto !important;width:min(820px,100%) !important;transform:translateX(-50%)}
+}
+
+/* Focus header: progress on the left, a single "Zakończ" on the right, on a solid strip. */
+.focus-counter{display:none}
+body.focus-study #flashcardsHub::before{
+  content:"";position:fixed;z-index:95;top:0;left:0;right:0;
+  height:calc(60px + env(safe-area-inset-top));
+  background:var(--bg);border-bottom:1px solid var(--line);
+}
+body.focus-study .focus-counter{
+  display:flex;align-items:center;position:fixed;z-index:100;
+  top:calc(8px + env(safe-area-inset-top));left:calc(16px + env(safe-area-inset-left));
+  min-height:44px;color:var(--muted);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;
+}
+body.focus-study #flashcardsHub .stage{padding-top:72px !important}
+body.focus-study #flashcardsHub .cardhead{position:static !important}
+
+/* "Wiem" lets a known card be graded without opening the answer. */
+#flashcardsHub #controls .reveal-row{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:8px}
+#flashcardsHub #controls .reveal-row #revealAnswer{grid-column:auto !important;order:0 !important;width:100%;margin:0}
+#flashcardsHub #controls .know-it{
+  min-height:52px;margin:0;border-radius:12px;cursor:pointer;
+  border:1px solid rgba(110,231,160,.6) !important;
+  background:rgba(110,231,160,.12) !important;
+  color:#c6f7d8 !important;font-size:16px !important;font-weight:800 !important;
+}
+#flashcardsHub #controls .know-it:hover{background:rgba(110,231,160,.2) !important}
+#flashcardsHub #controls .know-it:focus-visible{outline:3px solid #9bd7ff;outline-offset:3px}
+
+/* Grade buttons say when the card comes back, so the choice is concrete. */
+#flashcardsHub #controls .gradebtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;line-height:1.15}
+#flashcardsHub #controls .gradebtn small{font-size:12px;font-weight:650;opacity:.78;letter-spacing:0}
+body.focus-study #flashcardsHub .face.front .cardhead .number{display:none}
+@media (min-width:801px){
+  body.focus-study #flashcardsHub #controls::after{
+    content:"Spacja – odpowiedź · W – wiem · 1–4 – ocena · U – cofnij";
+    grid-column:1 / -1;text-align:center;font-size:12px;color:var(--muted);padding-top:2px;
+  }
+}
+
+/* After a grade: what happened, when it returns, and a way back from a mis-tap. */
+.grade-toast{
+  position:fixed;z-index:110;left:50%;transform:translateX(-50%);
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px;max-width:calc(100% - 24px);
+  padding:6px 6px 6px 14px;border-radius:12px;
+  background:#e7f1ff;color:#0b1220;font-size:14px;font-weight:700;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.grade-toast[hidden]{display:none}
+.grade-toast span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grade-toast button{flex:0 0 auto;min-height:40px;padding:6px 14px;border:0;border-radius:9px;background:#0b1220;color:#e7f1ff;font:inherit;font-weight:800;cursor:pointer}
+.grade-toast button:focus-visible{outline:3px solid #2f6fed;outline-offset:2px}
+body.is-studying .grade-toast{bottom:calc(96px + env(safe-area-inset-bottom))}
+@media (min-width:801px){body.focus-study .grade-toast{bottom:calc(120px + env(safe-area-inset-bottom))}}
+
+/* Answer side keeps the question and the learner's own attempt in view for comparison. */
+#flashcardsHub .answer-question{margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid var(--line)}
+#flashcardsHub .answer-question p{margin:4px 0 0;font-size:16px;font-weight:700;line-height:1.4;color:var(--text)}
+#flashcardsHub .your-answer{margin:0 0 14px;padding:12px 14px;border:1px dashed var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
+#flashcardsHub .your-answer p{margin:4px 0 0;font-size:15px;line-height:1.5;color:var(--muted)}
+
+/* Session summary: the cards that need work, and one tap to retry them. */
+.session-missed{margin:18px 0 0;text-align:left}
+.session-missed h3{margin:0 0 8px;font-size:15px;color:var(--text)}
+.session-missed ol{margin:0;padding:0 0 0 20px;display:grid;gap:6px;color:var(--muted);font-size:14px;line-height:1.45}
+#flashcardsHub #controls .done-secondary{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.session-done .app > footer,
+body.session-done .storage-status-wrap,
+body.is-studying .app > footer,
+body.is-studying .storage-status-wrap{display:none !important}
+
+/* Each new card settles in instead of snapping. */
+@media (prefers-reduced-motion:no-preference){
+  body.is-studying #flashcardsHub #card{animation:card-in .18s ease-out}
+  @keyframes card-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
+
+/* Category picker on phones: a bottom sheet above the sticky tab rail instead of a dropdown under it. */
+@media (max-width:700px){
+  #flashcardsHub .category-picker-panel{
+    position:fixed !important;z-index:130 !important;
+    left:8px !important;right:8px !important;top:auto !important;
+    bottom:calc(8px + env(safe-area-inset-bottom)) !important;
+    min-width:0 !important;max-height:min(78dvh,620px) !important;
+    box-shadow:0 -10px 60px rgba(0,0,0,.55),0 0 0 100vmax rgba(3,8,16,.55) !important;
+  }
+  #flashcardsHub .toolbar:has(.category-picker-panel:not([hidden])){position:relative;z-index:140 !important}
+}
+
+/* Session banner (study outside focus mode): solid and on one row so it never covers the card. */
+#flashcardsHub .study-queue-banner{background:var(--panel,#0c172a) !important}
+#flashcardsHub .study-queue-banner[hidden]{display:none !important}
+#flashcardsHub .study-queue-banner .study-banner-actions{display:flex !important;flex-wrap:nowrap;gap:8px}
+@media (max-width:700px){
+  #flashcardsHub .study-queue-banner{position:static !important;flex-direction:row !important;align-items:center !important;gap:10px}
+  #flashcardsHub .study-queue-banner .study-banner-actions button{width:auto !important;padding:8px 12px}
+}
+
+@media (prefers-color-scheme:light){
+  body.focus-study #flashcardsHub #controls{box-shadow:0 -8px 24px rgba(20,32,51,.12) !important}
+  #flashcardsHub #controls .know-it{background:#e9f9ef !important;border-color:#3fa66a !important;color:#0f5132 !important}
+}
+@media (max-width:800px) and (prefers-color-scheme:light){
+  body.is-studying #flashcardsHub #controls{box-shadow:0 -8px 24px rgba(20,32,51,.12) !important}
+}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#mount">Przejdź do fiszki</a>
@@ -2581,7 +2713,7 @@ Content-Type: application/json
   <div class="prose-card"><h3>REST: mnemotechnika</h3><div class="mnemonic"><b>GET = Get</b><span>odczytaj reprezentację</span><b>POST = Process/Create</b><span>utwórz albo wykonaj komendę</span><b>PUT = Put this state</b><span>ustaw docelową reprezentację</span><b>PATCH = Patch it</b><span>zmień fragment</span><b>DELETE = Delete</b><span>usuń</span></div></div>
   <div class="prose-card"><h3>Na co uważać podczas rozmowy</h3><ul class="checklist"><li>Nie myl authentication z authorization.</li><li>Nie myl idempotencji z „brakiem efektów ubocznych”.</li><li>Nie zakładaj, że POST zawsze musi tworzyć rekord.</li><li>Nie używaj 200 do każdego błędu biznesowego.</li><li>Nie projektuj API bez paginacji, jeśli kolekcja może rosnąć.</li><li>Nie obiecuj performance bez wskazania metryki i workloadu.</li></ul></div>
 </div></section>
-<div id="flashcardsHub" class="hub active"><button type="button" id="exitFocusStudy" class="focus-exit">Wyjdź</button>
+<div id="flashcardsHub" class="hub active"><div id="focusCounter" class="focus-counter" aria-live="polite"></div><div id="gradeToast" class="grade-toast" role="status" hidden><span id="gradeToastText"></span><button type="button" id="gradeToastUndo">Cofnij</button></div><button type="button" id="exitFocusStudy" class="focus-exit" title="Zakończ sesję i zobacz podsumowanie">Zakończ</button>
 <section class="toolbar"><div class="mobile-study-bar" id="mobileStudyBar"><button type="button" class="toolbtn" id="openFilters" aria-expanded="false" aria-controls="filterDrawerBody">Filtry</button></div><details class="filter-drawer" id="filterDrawer"><summary class="filter-drawer-summary">Filtry i sesja</summary><div class="filter-drawer-body" id="filterDrawerBody">
 <div class="filter-help"><strong>Znajdź fiszki</strong><span>Zawęź talię tylko wtedy, gdy chcesz. Potem naciśnij Ucz się.</span></div>
 <div class="tools">
@@ -2595,7 +2727,7 @@ Content-Type: application/json
 <details class="advanced-tools" id="advancedTools"><summary><span>Więcej narzędzi</span><small>masowa zmiana statusu i lista odpowiedzi</small></summary><div class="subtools flashcard-bulk-tools" id="advancedToolsContent" aria-label="Szybkie działania na fiszkach"><span class="chip" id="bulkScope">Działania dotyczą aktualnie pasujących fiszek</span><button class="toolbtn" id="markMatchingKnown" type="button">Oznacz pasujące jako znane</button><button class="toolbtn" id="markMatchingUnknown" type="button">Oznacz pasujące jako nieznane</button><button class="toolbtn" id="markMatchingReview" type="button">Oznacz pasujące jako do nauki</button><button class="toolbtn" id="toggleAnswerBrowser" type="button" aria-expanded="false">Lista pytań i odpowiedzi</button></div></details><div id="answerBrowser" class="answer-browser" hidden><div class="answer-browser-head"><div><strong>Przegląd fiszek</strong><span id="answerBrowserCount">Wszystkie pasujące fiszki</span></div><label>Na stronie <select id="answerPageSize" class="select"><option value="20">20</option><option value="50" selected>50</option><option value="100">100</option></select></label><button class="toolbtn" id="closeAnswerBrowser" type="button">Zamknij</button></div><div class="answer-browser-quick"><button type="button" id="answerShowPage">Pokaż odpowiedzi na stronie</button><button type="button" id="answerHidePage">Ukryj odpowiedzi na stronie</button></div><div class="answer-browser-summary" id="answerBrowserSummary" aria-live="polite"></div><div id="answerBrowserItems" class="answer-browser-items"></div><div class="answer-browser-pagination"><button class="toolbtn" id="answerPrevPage" type="button">← Poprzednie</button><span id="answerPageLabel"></span><button class="toolbtn" id="answerNextPage" type="button">Następne →</button></div></div>
 <div class="subtools"><button class="toolbtn" id="sources">196 źródeł</button><button class="toolbtn" id="export">Pełny backup JSON</button><button class="toolbtn" id="importBtn">Import JSON</button><input id="importFile" type="file" accept="application/json" hidden><button class="toolbtn" id="reset">Reset stanów</button><span class="chip">←/→ poprzednia lub następna · <kbd>Spacja</kbd> pokaż odpowiedź · po odsłonięciu <kbd>1–4</kbd> oceń odpowiedź</span></div>
 </div></details></section>
-<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress" id="cardProgress" role="progressbar" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" aria-label="Pozycja w zestawie fiszek"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Pokaż odpowiedź, potem oceń jedną z czterech opcji. <span class="hint-swipe">Poza sesją przesuń kartę, żeby zmienić fiszkę.</span> <span class="hint-keys">Skróty: spacja, po odpowiedzi klawisze 1–4.</span></div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
+<div class="layout"><main class="stage"><div id="studyQueueBanner" class="study-queue-banner" hidden></div><div class="progress" id="cardProgress" role="progressbar" aria-valuemin="1" aria-valuemax="1" aria-valuenow="1" aria-label="Pozycja w zestawie fiszek"><i id="progressBar"></i></div><div id="mount"></div><div id="controls" class="controls" tabindex="-1" aria-label="Sterowanie fiszką"></div><div class="flipHint">Pokaż odpowiedź, potem oceń jedną z czterech opcji. <span class="hint-swipe">Poza sesją przesuń kartę, żeby zmienić fiszkę.</span> <span class="hint-keys">Skróty: spacja – odpowiedź, W – wiem, 1–4 – ocena, U – cofnij.</span></div></main><aside class="sidebar"><div class="sideTitle">Aktualny zestaw</div><div id="list" class="list"></div><div class="legend"><div><i class="ldot reviewd"></i> Do powtórzenia</div><div><i class="ldot knownd"></i> Znane</div><div><i class="ldot unknownd"></i> Nieznane</div></div><div id="learningInsights" class="learning-insights" aria-live="polite"></div></aside></div>
 </div>
 <div id="auditHub" class="hub"></div><div id="resourcesHub" class="hub"></div><div id="casesHub" class="hub"></div><div id="cheatsHub" class="hub"></div><div id="architectureHub" class="hub"></div><div id="careerHub" class="hub extraHub"></div>
 <div id="modal" class="modal"><div class="modalbox" id="modalbox"></div></div>
@@ -2730,7 +2862,8 @@ function syncCategoryPicker(){
  const trigger=document.querySelector('#categoryPickerTrigger'),label=document.querySelector('#categoryLabel'),count=document.querySelector('#categoryPickerCount');
  const total=chosen.size,summary=total?`${total} ${total===1?'kategoria':total<5?'kategorie':'kategorii'}`:'Wszystkie kategorie';
  if(trigger)trigger.innerHTML=`${esc(summary)} <span aria-hidden="true">⌄</span>`;
- if(label)label.textContent='Kategoria';if(count)count.textContent=total?`${summary} wybrane`:'Bez ograniczenia kategorii';
+ if(label)label.textContent='Kategoria';const pickedCards=[...select.selectedOptions].filter(o=>o.value!=='all').reduce((sum,o)=>sum+Number((o.textContent.match(/·\s*(\d+)$/)||[])[1]||0),0);
+ if(count)count.textContent=total?`${summary} · ${pickedCards} fiszek`:`Wszystkie · ${cards.length} fiszek`;
  optionsRoot.querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',()=>{
   const option=[...select.options].find(o=>o.value===input.value);if(option)option.selected=input.checked;
   const all=select.querySelector('option[value="all"]');if(all)all.selected=selectedCategoryValues().length===0;
@@ -2739,8 +2872,8 @@ function syncCategoryPicker(){
 }
 function setCategoryPickerOpen(open){const panel=document.querySelector('#categoryPickerPanel'),trigger=document.querySelector('#categoryPickerTrigger');if(!panel||!trigger)return;panel.hidden=!open;trigger.setAttribute('aria-expanded',open?'true':'false');if(open){syncCategoryPicker();setTimeout(()=>document.querySelector('#categoryPickerSearch')?.focus(),0)}}
 function populate(){
- const cats=[...new Set(cards.map(c=>c.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pl'));
- const categoryCounts=new Map(cats.map(cat=>[cat,cards.filter(c=>c.category===cat).length]));
+ const categoryCounts=new Map();cards.forEach(c=>{const topic=FlashcardOrder.categoryTopic(c.category);categoryCounts.set(topic,(categoryCounts.get(topic)||0)+1)});
+ const cats=[...categoryCounts.keys()].sort((a,b)=>categoryCounts.get(b)-categoryCounts.get(a)||a.localeCompare(b,'pl'));
  const sourceCounts=new Map();cards.forEach(c=>{const id=String(c.source_id||'');if(id)sourceCounts.set(id,(sourceCounts.get(id)||0)+1)});
  const categoryEl=document.querySelector('#category'),sourceEl=document.querySelector('#source');
  categoryEl.innerHTML='<option value="all">Wszystkie kategorie</option>'+cats.map(x=>`<option value="${esc(x)}">${esc(x)} · ${categoryCounts.get(x)}</option>`).join('');
@@ -2901,13 +3034,14 @@ function onNativeFocusChange(){
 }
 document.addEventListener('fullscreenchange',onNativeFocusChange);
 document.addEventListener('webkitfullscreenchange',onNativeFocusChange);
-document.querySelector('#exitFocusStudy')?.addEventListener('click',()=>exitFocusStudy());
+document.querySelector('#gradeToastUndo')?.addEventListener('click',()=>undoLastGrade());
+document.querySelector('#exitFocusStudy')?.addEventListener('click',()=>{if(queueMode)finishLearningQueue();else exitFocusStudy();});
 
-function startLearningQueue(){
- const currentPool=filtered.slice();
+function startLearningQueue(pool,sizeOverride){
+ const currentPool=(Array.isArray(pool)?pool:filtered).slice();
  if(!currentPool.length){const banner=document.querySelector('#studyQueueBanner');banner.hidden=false;banner.innerHTML='<div><strong>Brak pasujących fiszek</strong><span>Zmień frazę lub filtry. Możesz też wrócić do całej bazy.</span></div><button type="button" id="clearQueueFilters">Wyczyść filtry</button>';banner.querySelector('#clearQueueFilters').onclick=clearFlashcardFilters;return}
  const store=getReviewStore(),review=store.review||{},now=Date.now();
- const sessionSize=document.querySelector('#sessionSize')?.value||'10';
+ const sessionSize=sizeOverride||document.querySelector('#sessionSize')?.value||'10';
  filtered=FlashcardOrder.buildStudyQueue(currentPool,review,now,sessionSize);index=0;flipped=false;queueMode=true;sessionReport=null;setStudyMode(true);learningSession={startedAt:Date.now(),ids:filtered.map(c=>c.id),results:[]};
  studySessionBanner(`Sesja · karta 1 z ${filtered.length}`);
  updateFilterSummary();render();enterFocusStudy();if(typeof focusActiveStudyCard==='function')focusActiveStudyCard();
@@ -2954,23 +3088,9 @@ function gradeFlashcard(c,grade){
  let store={};try{store=JSON.parse(localStorage.getItem(FLASH_TRAIN_KEY)||'{}')}catch{}
  store.review ||= {};
  const prev=store.review[c.id]||{reps:0,interval:0,lapses:0,ease:2.5};
- let reps=Number(prev.reps)||0,lapses=Number(prev.lapses)||0,ease=Math.max(1.3,Number(prev.ease)||2.5);
  const now=Date.now(),confidence=confidenceLevel(c.id);
  const draftsBeforeGrade=recallDrafts(),writtenAnswer=String(draftsBeforeGrade[c.id]||'');
- const quality={again:1,partial:2,good:4,easy:5}[grade]??2;
- // SM-2-inspired ease adjustment. This is an intentionally simple heuristic, not a claim of a validated SM-2 implementation.
- ease=Math.max(1.3,ease+(0.1-(5-quality)*(0.08+(5-quality)*0.02)));
- let intervalDays;
- if(grade==='again'){intervalDays=0;reps=0;lapses++}
- else if(grade==='partial'){intervalDays=0.5;reps=Math.max(0,reps)}
- else if(grade==='good'){intervalDays=reps===0?1:reps===1?3:Math.max(3,(Number(prev.interval)||3)*ease);reps++}
- else {intervalDays=reps===0?2:reps===1?5:Math.max(5,(Number(prev.interval)||5)*(ease+0.3));reps++}
- // Calibrate interval to actual recall. High confidence + weak recall is a stronger warning than either signal alone.
- let calibration='neutral';
- if(confidence===3&&(grade==='again'||grade==='partial')){calibration='overconfident';intervalDays=grade==='again'?0:Math.min(intervalDays,0.25)}
- else if(confidence===1&&(grade==='good'||grade==='easy')){calibration='underconfident';intervalDays=Math.min(intervalDays,grade==='easy'?3:2)}
- else if(confidence===2&&(grade==='again'||grade==='partial')){calibration='uncertain';intervalDays=Math.min(intervalDays,grade==='again'?0:0.5)}
- const due=grade==='again'?now+10*60*1000:now+Math.max(0.25,intervalDays)*86400000;
+ const {reps,interval:intervalDays,ease,lapses,due,calibration}=FlashcardOrder.scheduleReview(prev,grade,confidence,now);
  store.review[c.id]={reps,interval:intervalDays,ease,lapses,last:now,due,grade,calibration};
  store.calibration ||= {};store.attempts ||= {};
  if(confidence){const history=store.calibration[c.id]||[];history.push({confidence,grade,calibration,at:now});store.calibration[c.id]=history.slice(-20)}
@@ -2997,15 +3117,17 @@ function render(){
  renderStats();
  updateFilterSummary();
  const mount=document.querySelector('#mount'),list=document.querySelector('#list'),controls=document.querySelector('#controls');
- if(queueMode){const banner=document.querySelector('#studyQueueBanner');const strong=banner?.querySelector('strong');if(strong)strong.textContent=`Sesja · karta ${index+1} z ${filtered.length}`;}
+ if(queueMode){const banner=document.querySelector('#studyQueueBanner');const strong=banner?.querySelector('strong');if(strong)strong.textContent=`Sesja · karta ${index+1} z ${filtered.length}`;const counter=document.querySelector('#focusCounter');if(counter)counter.textContent=`${index+1} / ${filtered.length}`;}
  if(sessionReport){
   const report=sessionReport;
+  const missedCards=(report.missedIds||[]).map(id=>cards.find(x=>x.id===id)).filter(Boolean);
   const streak=studyStreakCount(readFlashcardUiState().studyDays||[]);
   const streakHtml=streak?`<p class="session-streak">Seria: ${streak} ${streak===1?'dzień':'dni'} z rzędu</p>`:'';
-  mount.innerHTML=`<section class="session-done-card" aria-live="polite"><p class="label">SESJA SKOŃCZONA</p><h2>${report.completed} z ${report.total}</h2><p class="session-done-lead">ocenionych kart · ${report.mins} min</p><div class="session-done-metrics"><span><b>${report.again}</b> nie pamiętałem</span><span><b>${report.partial}</b> częściowo</span><span><b>${report.good}</b> umiem</span></div>${streakHtml}<p class="session-note">${esc(report.note||'')}</p></section>`;
+  mount.innerHTML=`<section class="session-done-card" aria-live="polite"><p class="label">SESJA SKOŃCZONA</p><h2>${report.completed} z ${report.total}</h2><p class="session-done-lead">ocenionych kart · ${report.mins} min</p><div class="session-done-metrics"><span><b>${report.again}</b> nie pamiętałem</span><span><b>${report.partial}</b> częściowo</span><span><b>${report.good}</b> umiem</span></div>${streakHtml}<p class="session-note">${esc(report.note||'')}</p>${missedCards.length?`<section class="session-missed"><h3>Do powtórki · ${missedCards.length}</h3><ol>${missedCards.map(x=>`<li>${esc(x.question)}</li>`).join('')}</ol></section>`:''}</section>`;
   list.innerHTML='';
   const bar=document.querySelector('#progressBar');if(bar)bar.style.width='100%';
-  controls.innerHTML=`<button class="statebtn primary-action" id="anotherSession">Jeszcze jedna sesja</button><button class="statebtn" id="backToDeck">Wróć do talii</button>`;
+  controls.innerHTML=`${missedCards.length?`<button class="statebtn primary-action" id="retryMissed">Powtórz trudne · ${missedCards.length}</button><div class="done-secondary"><button class="statebtn" id="anotherSession">Nowa sesja</button><button class="statebtn" id="backToDeck">Wróć do talii</button></div>`:`<button class="statebtn primary-action" id="anotherSession">Jeszcze jedna sesja</button><button class="statebtn" id="backToDeck">Wróć do talii</button>`}`;
+  const retry=controls.querySelector('#retryMissed');if(retry)retry.onclick=()=>{sessionReport=null;startLearningQueue(missedCards,'all')};
   controls.querySelector('#anotherSession').onclick=()=>{sessionReport=null;apply();startLearningQueue()};
   controls.querySelector('#backToDeck').onclick=()=>{sessionReport=null;apply()};
   const doneBanner=document.querySelector('#studyQueueBanner');if(doneBanner)doneBanner.hidden=true;
@@ -3020,6 +3142,8 @@ function render(){
  <div class="content"><div class="label">PYTANIE</div><div class="question">${rich(c.question)}</div><details class="optional-recall"><summary>Twoja odpowiedź (opcjonalnie)</summary><div class="recall-box"><label for="recall-${esc(c.id)}">Spróbuj odpowiedzieć z pamięci</label><textarea id="recall-${esc(c.id)}" placeholder="Zapisz kilka słów, zanim odsłonisz wzorcową odpowiedź. Możesz też pominąć notatkę.">${esc(recallDrafts()[c.id]||'')}</textarea><div class="recall-tip">Notatka zapisuje się lokalnie. Najważniejsze jest samodzielne przypomnienie, nie idealne sformułowanie.</div><div class="recall-saved" id="recallSaved" aria-live="polite"></div></div></details></div></article>
  <article class="face back"><div class="cardhead"><span class="badge"><i class="dot" style="background:var(--green)"></i>ODPOWIEDŹ</span><span class="number">${esc(c.source_deck||'')}</span></div>
  <div class="content answer-content">
+ <div class="answer-question"><div class="label">PYTANIE</div><p>${rich(c.question)}</p></div>
+ ${String(recallDrafts()[c.id]||'').trim()?`<div class="your-answer"><div class="label">TWOJA ODPOWIEDŹ · porównaj ze wzorcem</div><p>${esc(recallDrafts()[c.id]).replace(/\n/g,'<br>')}</p></div>`:''}
  <div class="answer-lead"><div class="label">KRÓTKA ODPOWIEDŹ</div><div class="answer answer-primary">${richLong(c.answer)}</div></div>
  ${flashcardExampleMarkup(c)}
  ${previousAttemptMarkup(c)}
@@ -3038,10 +3162,13 @@ function render(){
  </div></article></div></div>`;
  document.querySelector('#card').onclick=null;
  const recall=document.getElementById('recall-'+c.id);if(recall){recall.addEventListener('input',()=>{saveRecallDraft(c.id,recall.value);const saved=document.querySelector('#recallSaved');if(saved)saved.textContent='Notatka zapisana lokalnie';});recall.addEventListener('click',e=>e.stopPropagation());}mount.querySelectorAll('[data-confidence]').forEach(b=>b.onclick=e=>{e.stopPropagation();saveConfidence(c.id,b.dataset.confidence);mount.querySelectorAll('[data-confidence]').forEach(x=>{const active=x===b;x.classList.toggle('selected',active);x.setAttribute('aria-pressed',active?'true':'false')});const saved=document.querySelector('#confidenceSaved, #recallSaved');if(saved)saved.textContent='Ocena zapisana. Teraz sprawdź odpowiedź.';const revealButton=controls.querySelector('#revealAnswer');if(revealButton){revealButton.textContent='Sprawdź odpowiedź →';revealButton.focus({preventScroll:true});}});
- controls.innerHTML=`${!flipped?`<button class="statebtn primary-action" id="revealAnswer">Pokaż odpowiedź</button>`:`<div class="grade-prompt" role="note">Jak poszło?</div><div class="grade-grid"><button class="gradebtn again" data-grade="again" title="Nie przypomniałem sobie odpowiedzi">Nie pamiętałem</button><button class="gradebtn partial" data-grade="partial" title="Pamiętałem tylko część odpowiedzi">Częściowo</button><button class="gradebtn good" data-grade="good" title="Potrafię wyjaśnić własnymi słowami">Umiem wyjaśnić</button><button class="gradebtn easy" data-grade="easy" title="Odpowiedź przyszła łatwo i bez wysiłku">Łatwe</button></div><button class="statebtn quiet" id="backToQuestion">Wróć do pytania</button>`}${`<button class="statebtn nav-card" id="prev">← Poprzednia</button><button class="statebtn nav-card" id="next">Następna →</button>`}`;
- const reveal=controls.querySelector('#revealAnswer');if(reveal)reveal.onclick=()=>{flipped=true;render()};
- const back=controls.querySelector('#backToQuestion');if(back)back.onclick=()=>{flipped=false;render()};
- controls.querySelectorAll('[data-grade]').forEach(b=>b.onclick=()=>{gradeFlashcard(c,b.dataset.grade);move(1)});
+ const reviewPrev=(getReviewStore().review||{})[c.id],previewNow=Date.now(),previewConfidence=confidenceLevel(c.id);
+ const gradeWhen=grade=>'za '+FlashcardOrder.formatInterval(FlashcardOrder.scheduleReview(reviewPrev,grade,previewConfidence,previewNow).due-previewNow);
+ controls.innerHTML=`${!flipped?`<div class="reveal-row"><button class="statebtn know-it" id="knowIt" title="Znam odpowiedź — oceń jako „Umiem wyjaśnić” i przejdź dalej">Wiem ✓</button><button class="statebtn primary-action" id="revealAnswer">Pokaż odpowiedź</button></div>`:`<div class="grade-prompt" role="note">Jak poszło?</div><div class="grade-grid"><button class="gradebtn again" data-grade="again" title="Nie przypomniałem sobie odpowiedzi">Nie pamiętałem<small>${queueMode?'wróci w tej sesji':gradeWhen('again')}</small></button><button class="gradebtn partial" data-grade="partial" title="Pamiętałem tylko część odpowiedzi">Częściowo<small>${gradeWhen('partial')}</small></button><button class="gradebtn good" data-grade="good" title="Potrafię wyjaśnić własnymi słowami">Umiem wyjaśnić<small>${gradeWhen('good')}</small></button><button class="gradebtn easy" data-grade="easy" title="Odpowiedź przyszła łatwo i bez wysiłku">Łatwe<small>${gradeWhen('easy')}</small></button></div><button class="statebtn quiet" id="backToQuestion">Wróć do pytania</button>`}${`<button class="statebtn nav-card" id="prev">← Poprzednia</button><button class="statebtn nav-card" id="next">Następna →</button>`}`;
+ const reveal=controls.querySelector('#revealAnswer');if(reveal)reveal.onclick=()=>{flipped=true;render();scrollStudyTop()};
+ const knowIt=controls.querySelector('#knowIt');if(knowIt)knowIt.onclick=()=>gradeAndAdvance(c,'good');
+ const back=controls.querySelector('#backToQuestion');if(back)back.onclick=()=>{flipped=false;render();scrollStudyTop()};
+ controls.querySelectorAll('[data-grade]').forEach(b=>b.onclick=()=>gradeAndAdvance(c,b.dataset.grade));
  controls.querySelectorAll('[data-state]').forEach(b=>b.onclick=e=>setStatus(e.currentTarget.dataset.state));const prevBtn=controls.querySelector('#prev'),nextBtn=controls.querySelector('#next');if(prevBtn)prevBtn.onclick=()=>move(-1);if(nextBtn)nextBtn.onclick=()=>move(1);
  list.innerHTML=filtered.slice(Math.max(0,index-25),Math.min(filtered.length,index+26)).map((x,j)=>{const real=Math.max(0,index-25)+j;return `<button class="item ${real===index?'active':''}" data-i="${real}"><b>${esc(x.question)}</b><span>${esc(x.category)} · ${x.status}</span></button>`}).join('');list.querySelectorAll('.item').forEach(b=>b.onclick=()=>{index=+b.dataset.i;flipped=false;render()});document.querySelector('#progressBar').style.width=((index+1)/filtered.length*100)+'%';
  if(document.body.classList.contains('focus-study')){const active=document.activeElement;if(!active||active===document.body||active.tagName==='BUTTON')document.querySelector('#controls')?.focus({preventScroll:true});}
@@ -3061,20 +3188,57 @@ function renderAnswerBrowser(){
 function markMatching(status){if(!filtered.length){alert('Brak pasujących fiszek. Wyczyść filtry lub zmień wyszukiwanie.');return}const label=status==='known'?'znane':status==='unknown'?'nieznane':'do powtórzenia';if(!confirm(`Oznaczyć wszystkie ${filtered.length} pasujące fiszki jako „${label}”? Możesz później zmienić status pojedynczej karty.`))return;const ids=new Set(filtered.map(c=>c.id));cards.forEach(c=>{if(ids.has(c.id))c.status=status});persist();apply();if(!document.querySelector('#answerBrowser').hidden)renderAnswerBrowser()}
 function resetProgress(){if(!confirm('Wyczyścić statusy wszystkich fiszek?'))return;cards.forEach(c=>c.status='review');persist();apply();}
 function finishLearningQueue(){
- exitFocusStudy();
+ exitFocusStudy();lastGradeUndo=null;hideGradeToast();
  const session=learningSession||{startedAt:Date.now(),results:[]},results=session.results||[];
- const count=grade=>results.filter(r=>r.grade===grade).length;
+ // Score each card by its first attempt: a missed card that passed on its retry was still missed.
+ const firstAttempt=new Map();results.forEach(r=>{if(!firstAttempt.has(r.id))firstAttempt.set(r.id,r)});
+ const firsts=[...firstAttempt.values()];
+ const count=grade=>firsts.filter(r=>r.grade===grade).length;
+ const missedIds=firsts.filter(r=>r.grade==='again'||r.grade==='partial').map(r=>r.id);
  const mins=Math.max(1,Math.round((Date.now()-(session.startedAt||Date.now()))/60000));
  const mismatch=results.filter(r=>r.calibration==='overconfident').length;
  const completed=new Set(results.map(r=>r.id)).size;
  const total=(session.ids||[]).length;
  queueMode=false;index=0;flipped=false;
- sessionReport={completed,total,again:count('again'),partial:count('partial'),good:count('good')+count('easy'),mins,note:mismatch?(mismatch+' '+(mismatch===1?'raz':'razy')+' pewność była wyższa niż to, co udało się przypomnieć.'):'Oceń według tego, co pamiętałeś, zanim zobaczyłeś odpowiedź.'};
+ sessionReport={completed,total,again:count('again'),partial:count('partial'),good:count('good')+count('easy'),mins,missedIds,note:mismatch?(mismatch+' '+(mismatch===1?'raz':'razy')+' pewność była wyższa niż to, co udało się przypomnieć.'):'Oceń według tego, co pamiętałeś, zanim zobaczyłeś odpowiedź.'};
  const banner=document.querySelector('#studyQueueBanner');if(banner)banner.hidden=true;
  setStudyMode(false);
  render();
 }
-function move(delta){if(!filtered.length)return;if(queueMode&&delta>0&&index>=filtered.length-1){finishLearningQueue();return}index=(index+delta+filtered.length)%filtered.length;flipped=false;render()}
+// One grading path for buttons, "Wiem" and keys: grade, give a missed card another try later in
+// the same session (max twice), and keep a snapshot so a mis-tap can be undone.
+let lastGradeUndo=null,gradeToastTimer=0;
+const GRADE_LABELS={again:'Nie pamiętałem',partial:'Częściowo',good:'Umiem',easy:'Łatwe'};
+function gradeAndAdvance(c,grade){
+ const keys=[FLASH_TRAIN_KEY,CONFIDENCE_KEY,RECALL_KEY];
+ const snapshot={raw:keys.map(k=>{try{return localStorage.getItem(k)}catch{return null}}),card:c,status:c.status,index,flipped,queue:filtered.slice(),results:learningSession?.results?.length||0,requeued:{...(learningSession?.requeued||{})}};
+ gradeFlashcard(c,grade);
+ let requeued=false;
+ if(queueMode&&learningSession&&grade==='again'){learningSession.requeued ||= {};const tries=learningSession.requeued[c.id]||0;if(tries<2){learningSession.requeued[c.id]=tries+1;filtered.splice(Math.min(filtered.length,index+4),0,c);requeued=true}}
+ try{navigator.vibrate?.(8)}catch{}
+ const due=(getReviewStore().review||{})[c.id]?.due;
+ lastGradeUndo=snapshot;
+ move(1);
+ if(sessionReport){hideGradeToast();return}
+ showGradeToast(`${GRADE_LABELS[grade]||'Zapisano'} · ${requeued?'wróci w tej sesji':due?'wróci za '+FlashcardOrder.formatInterval(due-Date.now()):'zapisano'}`);
+}
+function showGradeToast(text){
+ const toast=document.querySelector('#gradeToast');if(!toast)return;
+ toast.querySelector('#gradeToastText').textContent=text;toast.hidden=false;
+ clearTimeout(gradeToastTimer);gradeToastTimer=setTimeout(hideGradeToast,5000);
+}
+function hideGradeToast(){clearTimeout(gradeToastTimer);const toast=document.querySelector('#gradeToast');if(toast)toast.hidden=true;}
+function undoLastGrade(){
+ const s=lastGradeUndo;if(!s||sessionReport)return;lastGradeUndo=null;
+ [FLASH_TRAIN_KEY,CONFIDENCE_KEY,RECALL_KEY].forEach((k,i)=>{try{if(s.raw[i]===null)localStorage.removeItem(k);else localStorage.setItem(k,s.raw[i])}catch{}});
+ s.card.status=s.status;persist();
+ filtered=s.queue;index=s.index;flipped=s.flipped;
+ if(learningSession){if(Array.isArray(learningSession.results))learningSession.results.length=s.results;learningSession.requeued=s.requeued}
+ if(typeof window.refreshInterviewReviewFromStorage==='function')window.refreshInterviewReviewFromStorage();
+ hideGradeToast();render();scrollStudyTop();
+}
+function scrollStudyTop(){if(!document.body.classList.contains('is-studying'))return;const hub=document.querySelector('#flashcardsHub');if(document.body.classList.contains('focus-study')&&hub)hub.scrollTop=0;else document.querySelector('#studyQueueBanner:not([hidden]), #mount')?.scrollIntoView({block:'start'});}
+function move(delta){if(!filtered.length)return;if(queueMode&&delta>0&&index>=filtered.length-1){finishLearningQueue();return}index=(index+delta+filtered.length)%filtered.length;flipped=false;render();scrollStudyTop()}
 function setStatus(st){if(!filtered.length)return;const id=filtered[index].id;const c=cards.find(x=>x.id===id);c.status=st;persist();move(1)}
 function openModal(type){const modal=document.querySelector('#modal'),box=document.querySelector('#modalbox');modal.classList.add('open');if(type==='add'){box.innerHTML=`<h2>Dodaj nową fiszkę</h2><div class="formgrid"><input id="fcat" class="field" placeholder="Typ / kategoria"><input id="fsource" class="field" placeholder="Source ID, np. mdn-js"><input id="fq" class="field full" placeholder="Pytanie"><textarea id="fa" class="field textarea full" placeholder="Odpowiedź, prosto i dokładnie"></textarea><textarea id="fe" class="field textarea full" placeholder="Mini przykład / case / kod"></textarea><textarea id="ft" class="field textarea full" placeholder="Senior takeaway"></textarea></div><div class="modalactions"><button class="close" onclick="closeModal()">Anuluj</button><button class="toolbtn primary" id="saveCard">Dodaj</button></div>`;const savedFormDraft=readStorageJson(FORM_DRAFT_KEY,{});['fcat','fsource','fq','fa','fe','ft'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=String(savedFormDraft[id]||'');});const saveFormDraft=()=>{const draft={};['fcat','fsource','fq','fa','fe','ft'].forEach(id=>{const el=document.getElementById(id);if(el)draft[id]=el.value});safeStorageSet(FORM_DRAFT_KEY,draft)};['fcat','fsource','fq','fa','fe','ft'].forEach(id=>document.getElementById(id)?.addEventListener('input',saveFormDraft));document.querySelector('#saveCard').onclick=()=>{const q=document.querySelector('#fq').value.trim(),a=document.querySelector('#fa').value.trim();if(!q||!a)return alert('Pytanie i odpowiedź są wymagane.');const sid=source_by_user(document.querySelector('#fsource').value.trim());addUser({category:document.querySelector('#fcat').value.trim()||'Moje fiszki',question:q,answer:a,example:document.querySelector('#fe').value.trim(),takeaway:document.querySelector('#ft').value.trim()||'Wyjaśnij mechanizm, trade-off i przykład.',source_id:sid});safeStorageSet(FORM_DRAFT_KEY,{});closeModal();apply();};}
 else{box.innerHTML=`<h2>Źródła · darmowe</h2><p style="color:var(--muted)">Każda karta ma przypisane źródło. Poniżej pełna biblioteka materiałów wykorzystanych do researchu.</p><div class="sourceGrid">${sources.map(s=>`<div class="sourceCard"><a href="${s.url}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a><div class="tag">${esc(s.tags)}</div><p>${esc(s.desc)}</p></div>`).join('')}</div><div class="modalactions"><button class="close" onclick="closeModal()">Zamknij</button></div>`}}
@@ -3098,11 +3262,13 @@ document.addEventListener('keydown',e=>{
  }
  else if((!queueMode||focusStudy)&&e.key==='ArrowRight'){e.preventDefault();move(1)}
  else if((!queueMode||focusStudy)&&e.key==='ArrowLeft'){e.preventDefault();move(-1)}
+ else if(!flipped&&!e.repeat&&e.key.toLowerCase()==='w'&&filtered[index]){e.preventDefault();gradeAndAdvance(filtered[index],'good')}
+ else if(!e.repeat&&e.key.toLowerCase()==='u'&&lastGradeUndo){e.preventDefault();undoLastGrade()}
  else if(flipped&&/^[1-4]$/.test(e.key)){
   if(e.repeat)return;
   const current=filtered[index];if(!current)return;
   const grade={1:'again',2:'partial',3:'good',4:'easy'}[e.key];
-  e.preventDefault();gradeFlashcard(current,grade);move(1);document.querySelector('#controls')?.focus({preventScroll:true});
+  e.preventDefault();gradeAndAdvance(current,grade);document.querySelector('#controls')?.focus({preventScroll:true});
  }
 });
 

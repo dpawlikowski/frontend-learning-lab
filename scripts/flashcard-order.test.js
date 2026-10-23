@@ -91,3 +91,51 @@ test('session size caps the queue and never invents cards', function () {
   assert.equal(order.buildStudyQueue(many, {}, 0, '10').length, 10);
   assert.equal(order.buildStudyQueue(many, {}, 0, 'all').length, 12);
 });
+
+test('category topics group granular categories under their leading topic', function () {
+  assert.equal(order.categoryTopic('JS BUG • REGEXP'), 'JS BUG');
+  assert.equal(order.categoryTopic('CASE STUDY / Microfrontends'), 'CASE STUDY');
+  assert.equal(order.categoryTopic('GraphQL — batching'), 'GRAPHQL');
+  assert.equal(order.categoryTopic('04 • CSS STANDARD 2026'), 'CSS STANDARD 2026');
+  assert.equal(order.categoryTopic('Next.js 16'), 'NEXT.JS 16');
+  assert.equal(order.categoryTopic(''), 'INNE');
+});
+
+test('filtering by a topic includes every category under it', function () {
+  const cards = [card('a', 'JS BUG • REGEXP'), card('b', 'JS BUG • JSON'), card('c', 'CSS')];
+  const found = order.filterCards(cards, { categories: ['JS BUG'] });
+  assert.deepEqual(found.map(function (item) { return item.id; }), ['a', 'b']);
+});
+
+test('schedule: again comes back in 10 minutes and counts a lapse', function () {
+  const next = order.scheduleReview({ reps: 3, interval: 10, lapses: 1, ease: 2.5 }, 'again', 0, 1000);
+  assert.equal(next.due, 1000 + 10 * 60 * 1000);
+  assert.equal(next.reps, 0);
+  assert.equal(next.lapses, 2);
+  assert.ok(next.ease < 2.5);
+});
+
+test('schedule: first good is one day, then three, then grows with ease', function () {
+  const day = 86400000;
+  const first = order.scheduleReview(null, 'good', 0, 0);
+  assert.equal(first.due, day);
+  const second = order.scheduleReview(first, 'good', 0, 0);
+  assert.equal(second.due, 3 * day);
+  const third = order.scheduleReview(second, 'good', 0, 0);
+  assert.ok(third.interval > 3);
+  assert.ok(order.scheduleReview(null, 'easy', 0, 0).due > first.due);
+});
+
+test('schedule: confident but wrong is flagged and kept short', function () {
+  const next = order.scheduleReview({ reps: 4, interval: 20, ease: 2.5 }, 'partial', 3, 0);
+  assert.equal(next.calibration, 'overconfident');
+  assert.equal(next.interval, 0.25);
+});
+
+test('interval labels are short and human readable', function () {
+  assert.equal(order.formatInterval(10 * 60 * 1000), '10 min');
+  assert.equal(order.formatInterval(12 * 3600 * 1000), '12 h');
+  assert.equal(order.formatInterval(3 * 86400000), '3 d');
+  assert.equal(order.formatInterval(21 * 86400000), '3 tyg.');
+  assert.equal(order.formatInterval(90 * 86400000), '3 mies.');
+});
